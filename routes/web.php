@@ -36,7 +36,9 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'auth'] , fun
     $route->get('word/updateWordCache','WordController@updateWordCache'); //清空词汇
     $route->post('word/store','WordController@store'); //保存词汇
 
-
+    //功能1：文章分级标注并导出
+    $route->get('article/create','ArticleController@create'); //重传词汇
+    $route->post('article/store','ArticleController@store'); //保存词汇
 
 });
 

@@ -61,9 +61,16 @@
                         <li><a href="{{ url('admin/word/index') }}">词汇列表</a></li>
                         <li><a href="{{ url('admin/word/create') }}">重导词汇</a></li>
                     </ul>
+
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">同城信息管理</span><span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-user"></i> <span class="nav-label">文章管理</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{ url('admin/article/create') }}">分级标注</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">文章管理</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('admin/house') }}">房源</a></li>
                         <li><a href="{{ url('admin/secondhand') }}">二手信息</a></li>
@@ -143,6 +150,7 @@
 <script src="/js/plugins/pace/pace.min.js"></script>
 
 @yield('js')
+
 <script>
     $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
 </script>
