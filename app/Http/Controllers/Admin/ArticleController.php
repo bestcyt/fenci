@@ -30,6 +30,8 @@ class ArticleController extends Controller
          * 2.用simditor 貌似有函数可以获取，点击分级的时候，把内容传后台，过滤分析，组装成html，返回渲染simditor
          * 换行，空格，怎么解决？找人拿一个实例来演示比较好点
          */
+        $article_string = str_replace('\r\n','<br>',$article_string);
+        dd($article_string);
         dd(strip_tags($article_string));
 
         $seg_list = Jieba::cut($article_string,false);

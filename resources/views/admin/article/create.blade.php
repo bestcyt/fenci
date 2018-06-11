@@ -37,7 +37,7 @@
                             <label class="col-sm-2 control-label">普通</label>
 
                             <div class="col-sm-10">
-                                <textarea type="text" name="article" class="form-control" style="width: 80%;height: 100%"></textarea>
+                                <textarea type="text" name="article" id="text" class="article form-control" style="width: 80%;height: 100%"></textarea>
                             </div>
                         </div>
 
@@ -72,7 +72,7 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit" id="shi">分级识别</button>
+                                <button class="btn btn-primary" type="button" id="shi">分级识别</button>
                                 <button class="btn btn-primary" type="button" id="dao">导出word</button>
                             </div>
                         </div>
@@ -89,7 +89,48 @@
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
     <script>
-        $(document).ready(function(){$(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",})});
+
+        $(document).ready(
+                function(){
+                    $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
+                    document.getElementById("shi").onclick = function() {
+                        var strContent = document.getElementById("text").value;
+                        alert("处理前的strContent为\r\n"+strContent);
+                        strContent = strContent.replace(/\r\n/g, '<br/>'); //IE9、FF、chrome
+                        strContent = strContent.replace(/\n/g, '<br/>'); //IE7-8
+                        strContent = strContent.replace(/\s/g, ' '); //空格处理
+                        alert("转换之后的html代码为\r\n"+strContent);
+                    };
+                        $(document).on('click','.article',function() {
+
+                            var _item = $(this);
+                            var title = "确定删除该专栏作者？";
+                            //            layer.confirm(title, {
+                            //                btn: ['删除', '取消'],
+                            //                icon: 5
+                            //            },function(index){
+                            //                var column_id = _item.children('.column_id').val();
+                            //                $.ajax({
+                            //                    headers: {
+                            //                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            //                    },
+                            //                    url:"column/"+column_id,
+                            //                    data:{'_method':'delete'},
+                            //                    type:'post',
+                            //                    success:function(data){
+                            //                        var data_obj = JSON.parse(data);
+                            //                        if(data_obj.data == 1){
+                            //                            layer.msg('删除成功');
+                            //                            $("#"+column_id).remove();
+                            //                        }else{
+                            //                            layer.msg('删除失败');
+                            //                        }
+                            //                    }
+                            //                },JSON);
+                            //                layer.close(index);
+                            //            });
+                        });
+                });
     </script>
 
     @endsection
