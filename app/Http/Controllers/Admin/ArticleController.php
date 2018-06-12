@@ -56,6 +56,7 @@ class ArticleController extends Controller
     public function ppl(Request $request){
 
         $article_string = $request->input('article');
+        $jibie_string = $request->input('jibie');
 
         //带br的文章字符串，没有别的html标签
         $article_string = str_replace('\r\n','<br>',$article_string);
@@ -66,32 +67,29 @@ class ArticleController extends Controller
         //获取缓存词汇库
         $words = \Illuminate\Support\Facades\Cache::get('words');
 
+        $jibie = array_filter(explode(',',$jibie_string));
+
         for ($i=0;$i<count($words);$i++){
             for ($j=0;$j<count($article_fenci);$j++){
-                $color = 'black';
-                if ($words[$i]['word'] == $article_fenci[$j]){
-                    switch ($words[$i]['level']){
-                        case '1':
-                            $color = 'red';
+                if ($words[$i]['word'] == $article_fenci[$j]){  //判断词汇是否匹配
+                    if (in_array($words[$i]['level'],$jibie)){ //判断需要显示的颜色是否在数组中
+                        if ($words[$i]['level'] == 1){
                             $article_fenci[$j] = "<span style='color: red'>$article_fenci[$j]</span>";
-                            break;
-                        case '2':
-                            $color = 'blue';
+                        }
+                        if ($words[$i]['level'] == 2){
                             $article_fenci[$j] = "<span style='color: blue'>$article_fenci[$j]</span>";
-                            break;
-                        case '3':
-                            $color = 'green';
-//                            $article_fenci[$j] = "<span style='color: green'>$article_fenci[$j]</span>";
-                            break;
-                        case '4':
-                            $color = 'yellow';
-//                            $article_fenci[$j] = "<span style='color: yellow'>$article_fenci[$j]</span>";
-                            break;
-                        case '5':
-                            $color = 'brown';
-//                            $article_fenci[$j] = "<span style='color: brown'>$article_fenci[$j]</span>";
-                            break;
+                        }
+                        if ($words[$i]['level'] == 3){
+                            $article_fenci[$j] = "<span style='color: green'>$article_fenci[$j]</span>";
+                        }
+                        if ($words[$i]['level'] == 4){
+                            $article_fenci[$j] = "<span style='color: yellow'>$article_fenci[$j]</span>";
+                        }
+                        if ($words[$i]['level'] == 5){
+                            $article_fenci[$j] = "<span style='color: brown'>$article_fenci[$j]</span>";
+                        }
                     }
+
                 }
             }
         }

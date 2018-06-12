@@ -8,7 +8,7 @@
 @section('content')
 
     <div class="row">
-        <div class="col-sm-5" style="height: 100%">
+        <div class="col-sm-6" style="height: 100%">
             <div class="ibox float-e-margins"  style="height: 100%">
                 <div class="ibox-title">
                     <h5>文章分级标注 <small>包括自定义样式的复选和单选按钮</small></h5>
@@ -47,23 +47,25 @@
                             <div class="col-sm-10" >
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="1" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                                        <input checked type="checkbox" id="check1" value="1" style="position: absolute; opacity: 0;">
+                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                    </div>
                                     1级</label>
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="2" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                                        <input checked type="checkbox" id="check2"  value="2" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
                                     2级</label>
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="3" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                                        <input checked type="checkbox" id="check3"  value="3" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
                                     3级</label>
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="4" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                                        <input checked type="checkbox" id="check4" value="4" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
                                     4级</label>
                                 <label class="checkbox-inline i-checks">
                                     <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="5" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                                        <input checked type="checkbox" id="check5" value="5" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
                                     5级</label>
                             </div>
                         </div>
@@ -78,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-5">
+        <div class="col-sm-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>分级显示 <small></small></h5>
@@ -110,38 +112,8 @@
                                 <div id="show" style="width: 100%;height: 400px;overflow: auto" >
 
                                 </div>
-                                {{--<textarea type="text" name="article" id="text" class="article form-control" style="width: 80%;height: 100%"></textarea>--}}
                             </div>
                         </div>
-
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">显示级别</label>
-
-                            <div class="col-sm-10" hidden>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="1" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                    1级</label>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="2" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                    2级</label>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="3" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                    3级</label>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="4" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                    4级</label>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" value="5" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                    5级</label>
-                            </div>
-                        </div>
-
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
@@ -167,6 +139,23 @@
                 function(){
                     $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
                     document.getElementById("shi").onclick = function() {
+                        var jibie = '';
+                        if ($('#check1').prop('checked')) {
+                            jibie += '1,';
+                        }
+                        if ($('#check2').prop('checked')) {
+                            jibie += '2,';
+                        }
+                        if ($('#check3').prop('checked')) {
+                            jibie += '3,';
+                        }
+                        if ($('#check4').prop('checked')) {
+                            jibie += '4,';
+                        }
+                        if ($('#check5').prop('checked')) {
+                            jibie += '5,';
+                        }
+                        console.log(jibie);
                         var strContent = document.getElementById("text").value;
                         strContent = strContent.replace(/\r\n/g, '<br>'); //IE9、FF、chrome
                         strContent = strContent.replace(/\n/g, '<br>'); //IE7-8
@@ -200,11 +189,11 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             url:"ppl",
-                            data:{'article':strContent},
+                            data:{'article':strContent,'jibie':jibie},
                             type:'post',
                             success:function(data){
                                 console.log(1);
-                                console.log(data);
+                                //console.log(data);
                                 $('#show').html(data);
 //                                alert(data);
 //                                layer.msg(data);
@@ -218,12 +207,22 @@
                             }
                         },JSON);
                     };
-                        $(document).on('click','.article',function() {
-
-                            var _item = $(this);
-                            var title = "确定删除该专栏作者？";
-
-                        });
+                    $("#check1").click(function(){
+                        alert('aa');
+                        $("#check1").removeAttr("checked");
+                    });
+                    $("#check2").click(function(){
+                        $("#check2").removeAttr("checked");
+                    });
+                    $("#check3").click(function(){
+                        $("#check3").removeAttr("checked");
+                    });
+                    $("#check4").click(function(){
+                        $("#check4").removeAttr("checked");
+                    });
+                    $("#check5").click(function(){
+                        $("#check5").removeAttr("checked");
+                    });
                 });
     </script>
 
