@@ -67,7 +67,7 @@ class WordController extends Controller
             DB::table('words')->insert($ar[$i]);
         }
         foreach ($array_all as $array_one=>&$value){
-            $value['id'] = $array_one;
+            $value['id'] = $array_one+1;
         }
         Cache::forever('words',$array_all);
         /*
@@ -148,5 +148,10 @@ class WordController extends Controller
 
         flash('清空成功','success')->important();
         return back();
+    }
+
+    public function getCache(){
+
+        dd(Cache::get('words'));
     }
 }

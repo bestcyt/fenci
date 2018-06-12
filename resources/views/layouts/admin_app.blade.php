@@ -5,6 +5,9 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="shortcut icon" href="/web.ico" />
     <title> 文章分词管理系统</title>
 
@@ -94,7 +97,7 @@
         </div>
     </nav>
 
-    <div id="page-wrapper" class="gray-bg">
+    <div id="page-wrapper" class="gray-bg"  style="height: 100%">
         <div class="row border-bottom">
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header">

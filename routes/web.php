@@ -30,6 +30,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'auth'] , function ($route){
 
+    //获取缓存词汇库
+    $route->get('word/cache','WordController@getCache');
+
     $route->get('word/index','WordController@index'); // 词汇列表
     $route->get('word/create','WordController@create'); //重传词汇
     $route->get('word/truncate','WordController@truncate'); //清空词汇
@@ -39,6 +42,7 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'auth'] , fun
     //功能1：文章分级标注并导出
     $route->get('article/create','ArticleController@create'); //重传词汇
     $route->post('article/store','ArticleController@store'); //保存词汇
+    $route->post('article/ppl','ArticleController@ppl'); //保存词汇
 
 });
 
