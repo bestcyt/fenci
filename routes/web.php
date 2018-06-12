@@ -41,8 +41,10 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'auth'] , fun
 
     //功能1：文章分级标注并导出
     $route->get('article/create','ArticleController@create'); //重传词汇
+    $route->get('article/test','ArticleController@test'); //重传词汇
     $route->post('article/store','ArticleController@store'); //保存词汇
     $route->post('article/ppl','ArticleController@ppl'); //保存词汇
+    $route->post('article/toWord','ArticleController@toWord'); //保存词汇
 
 });
 

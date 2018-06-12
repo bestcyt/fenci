@@ -103,12 +103,13 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <form method="post" class="form-horizontal" action="{{ url('admin/article/store') }}">
+                    <form method="post" class="form-horizontal" id="dao_form" action="{{ url('admin/article/toWord') }}">
                         {{ csrf_field() }}
                         <div class="form-group">
                             <label class="col-sm-2 control-label">分词标注结果</label>
 
                             <div class="col-sm-10">
+                                <input type="hidden" name="article" value="" id="article">
                                 <div id="show" style="width: 100%;height: 400px;overflow: auto" >
 
                                 </div>
@@ -195,34 +196,14 @@
                                 console.log(1);
                                 //console.log(data);
                                 $('#show').html(data);
-//                                alert(data);
-//                                layer.msg(data);
-//                                var data_obj = JSON.parse(data);
-//                                if(data_obj.data == 1){
-//                                    layer.msg('删除成功');
-//                                    //$("#"+column_id).remove();
-//                                }else{
-//                                    layer.msg('删除失败');
-//                                }
                             }
                         },JSON);
                     };
-                    $("#check1").click(function(){
-                        alert('aa');
-                        $("#check1").removeAttr("checked");
-                    });
-                    $("#check2").click(function(){
-                        $("#check2").removeAttr("checked");
-                    });
-                    $("#check3").click(function(){
-                        $("#check3").removeAttr("checked");
-                    });
-                    $("#check4").click(function(){
-                        $("#check4").removeAttr("checked");
-                    });
-                    $("#check5").click(function(){
-                        $("#check5").removeAttr("checked");
-                    });
+                    document.getElementById("dao").onclick = function() {
+                        var strContent = $('#show').html();
+                        $('#article').val(strContent);
+                        $('#dao_form').submit();
+                    };
                 });
     </script>
 
