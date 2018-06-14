@@ -119,7 +119,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 {{--<button class="btn btn-primary" type="button" id="shi">分级识别</button>--}}
-                                <button class="btn btn-primary" type="button" id="dao">导出word</button>
+                                <button class="btn  btn-primary" type="button" id="dao">导出word</button>
                             </div>
                         </div>
                     </form>

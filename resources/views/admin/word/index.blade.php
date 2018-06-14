@@ -7,7 +7,7 @@
 @section('content')
     @inject('request', 'Illuminate\Http\Request')
     <div class="row wrapper border-bottom white-bg page-heading">
-        <div class="col-lg-10">
+        <div class="col-lg-6">
             <h2>词汇</h2>
             <ol class="breadcrumb">
                 <li>
@@ -21,9 +21,10 @@
                 </li>
             </ol>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-6">
             <div class="title-action">
-                <a href="{{ url('admin/word/create') }}" class="btn btn-info"><i class="fa fa-plus"></i> 重导词汇</a>
+                <a href="{{ url('admin/word/create') }}" class="btn btnloading btn-info"><i class="fa fa-plus"></i> 重导词汇</a>
+                <a href="{{ url('admin/word/outExcel') }}" class="btn btnloading btn-success"><i class="fa fa-cloud-download"></i> 导出词汇</a>
             </div>
         </div>
     </div>
@@ -121,37 +122,7 @@
             }else {
                 ajax_url = 'city/';
             }
-            $(document).on('click','.destroy_item',function() {
-                var _item = $(this);
-                var title = "确定删除该城市？";
-                layer.confirm(title, {
-                    btn: ['删除', '取消'],
-                    icon: 5
-                },function(index){
-                    var ii = layer.load();
-                    var city_id = _item.children('.city_id').val();
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url:ajax_url+city_id,
-                        data:{'_method':'delete'},
-                        type:'post',
-                        success:function(data){
-                            var data_obj = JSON.parse(data);
-                            if(data_obj.code == 1){
-                                layer.close(ii);
-                                layer.msg('删除成功');
-                                $("#"+city_id).remove();
-                            }else{
-                                layer.close(ii);
-                                layer.msg('删除失败');
-                            }
-                        }
-                    },JSON);
-                    layer.close(index);
-                });
-            });
+
         })
 
     </script>

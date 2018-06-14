@@ -38,7 +38,8 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group draggable">
                             <div class="col-sm-12 col-sm-offset-3">
-                                <button class="btn btn-primary" type="submit">上传</button>
+                                <button class="btn btnloading btn-primary" type="submit" >上传</button>
+
                             </div>
                         </div>
                     </form>
@@ -46,6 +47,20 @@
                 </div>
             </div>
         </div>
+            {{--<div class="sk-spinner sk-spinner-circle" style="width: 50px;height: 50px;">--}}
+                {{--<div class="sk-circle1 sk-circle"></div>--}}
+                {{--<div class="sk-circle2 sk-circle"></div>--}}
+                {{--<div class="sk-circle3 sk-circle"></div>--}}
+                {{--<div class="sk-circle4 sk-circle"></div>--}}
+                {{--<div class="sk-circle5 sk-circle"></div>--}}
+                {{--<div class="sk-circle6 sk-circle"></div>--}}
+                {{--<div class="sk-circle7 sk-circle"></div>--}}
+                {{--<div class="sk-circle8 sk-circle"></div>--}}
+                {{--<div class="sk-circle9 sk-circle"></div>--}}
+                {{--<div class="sk-circle10 sk-circle"></div>--}}
+                {{--<div class="sk-circle11 sk-circle"></div>--}}
+                {{--<div class="sk-circle12 sk-circle"></div>--}}
+            {{--</div>--}}
         <div class="col-sm-5">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
@@ -61,7 +76,7 @@
                         <div class="col-md-6 droppable sortable" style="display: none;">
                         </div>
                     </div>
-                    <a type="button" href="{{ url('admin/word/updateWordCache') }}" class="btn btn-warning" data-clipboard-text="testing" id="copy-to-clipboard">
+                    <a type="button" href="{{ url('admin/word/updateWordCache') }}" class="btn btnloading btn-warning" data-clipboard-text="testing" id="copy-to-clipboard">
                         刷新缓存
                     </a>
                 </div>
@@ -69,5 +84,6 @@
         </div>
     </div>
     </div>
+
 @endsection
 

@@ -44,7 +44,7 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="button" id="tongji">词汇统计</button>
+                                <button class="btn btnloading btn-primary" type="button" id="tongji">词汇统计</button>
                             </div>
                         </div>
                     </form>

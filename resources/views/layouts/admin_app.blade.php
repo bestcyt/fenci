@@ -73,27 +73,6 @@
                         <li><a href="{{ url('admin/article/wordCount') }}">词频统计</a></li>
                     </ul>
                 </li>
-                <li>
-                    <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">文章管理</span><span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="{{ url('admin/house') }}">房源</a></li>
-                        <li><a href="{{ url('admin/secondhand') }}">二手信息</a></li>
-                        <li><a href="{{ url('admin/job') }}">求职招聘</a></li>
-                        <li><a href="{{ url('admin/friend') }}">交友</a></li>
-                        <li><a href="{{ url('admin/travel') }}">出行</a></li>
-                        <li><a href="{{ url('admin/treehole') }}">树洞</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-sitemap"></i> <span class="nav-label">城市管理 </span><span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="{{ url('admin/city') }}">城市列表</a></li>
-                        {{--<li><a href="{{ url('admin/city/create') }}">创建城市</a></li>--}}
-                        <li><a href="{{ url('admin/city') }}">创建城市</a></li>
-                    </ul>
-                </li>
-
-
             </ul>
         </div>
     </nav>
@@ -156,7 +135,14 @@
 @yield('js')
 
 <script>
-    $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+
+    $(function () {
+        $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+//        $(".btnloading").click(function(){
+//            $(this).button('loading');
+//            setTimeout(function () { $(this).button('complete'); },2000);
+//        });
+    })
 </script>
 </body>
 
