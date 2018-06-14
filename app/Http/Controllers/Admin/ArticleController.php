@@ -11,10 +11,16 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ArticleController extends Controller
 {
+    public $jieba;
+    public $finalseg;
+
     public function __construct()
     {
-        Jieba::init();
-        Finalseg::init();
+        $this->jieba = new Jieba();
+        $this->finalseg = new Finalseg();
+
+        $this->jieba->init();
+        $this->finalseg->init();
     }
 
     //文本框界面，输入
@@ -32,7 +38,7 @@ class ArticleController extends Controller
         $article_string = str_replace('\r\n','<br>',$article_string);
 
         //分词，形成数组
-        $article_fenci = Jieba::cut($article_string,false);
+        $article_fenci = $this->jieba->cut($article_string,false);
 
         //获取缓存词汇库
         $words = \Illuminate\Support\Facades\Cache::get('words');
