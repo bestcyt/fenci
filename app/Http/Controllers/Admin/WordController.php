@@ -58,7 +58,7 @@ class WordController extends Controller
         $time = date('Y-m-d H:m:i',time());
         for ($i=0;$i<count($re);$i++){
             for ($j=0;$j<count($re[$i]);$j++){
-                $ar[$i][$j]['word'] = $re[$i][$j][0];
+                $ar[$i][$j]['word'] = trim($re[$i][$j][0]);
                 $ar[$i][$j]['mean'] = $re[$i][$j][1];
                 $ar[$i][$j]['level'] = $i+1;
                 $ar[$i][$j]['created_at'] = $time;
@@ -96,40 +96,6 @@ class WordController extends Controller
         Cache::forever('words',$words);
         flash('刷新缓存成功','success')->important();
         return redirect()->to('admin/word/index');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

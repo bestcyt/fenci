@@ -7,6 +7,7 @@ use Fukuball\Jieba\Jieba;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ArticleController extends Controller
 {
@@ -58,7 +59,6 @@ class ArticleController extends Controller
                             $article_fenci[$j] = "<span style='color: brown'>$article_fenci[$j]</span>";
                         }
                     }
-
                 }
             }
         }
@@ -111,11 +111,65 @@ class ArticleController extends Controller
             //获取缓存词汇库
             $words = \Illuminate\Support\Facades\Cache::get('words');
 
-            //先对提交的文章去重复，再重新排键值，
+            //先对提交的文章去重复，再重新排键值，times=该单词的个数
+            $article_unique = array_values(array_unique($article));
 
             //循环统计值，修改数组结果，再遍历唯一编码
-            dd($article);
+            $art_arr = [];
+            for ($i=0;$i<count($article_unique);$i++){
+                $art_arr[$i]['word'] = $article_unique[$i];
+                $art_arr[$i]['times'] = 0;
+            }
+
+            //统计去重后的文章的各个单词的个数
+            for ($i=0;$i<count($article);$i++){
+                for ($j=0;$j<count($article_unique);$j++){
+                    if ($article[$i] == $article_unique[$j]){  //判断词汇是否匹配
+                        $art_arr[$j]['times'] ++;
+                    }
+                }
+            }
+
+            //统计文章词汇各个等级的个数
+            $level1 = $level2 = $level3 = $level4 = $level5 = 0;
+            for ($i=0;$i<count($words);$i++){
+                for ($j=0;$j<count($article);$j++){
+                    if ($words[$i]['word'] == $article[$j]){  //判断词汇是否匹配
+                        if ($words[$i]['level'] == 1){
+                            $level1 ++;
+                        }
+                        if ($words[$i]['level'] == 2){
+                            $level2 ++;
+                        }
+                        if ($words[$i]['level'] == 3){
+                            $level3 ++;
+                        }
+                        if ($words[$i]['level'] == 4){
+                            $level4 ++;
+                        }
+                        if ($words[$i]['level'] == 5){
+                            $level5 ++;
+                        }
+                    }
+                }
+            }
+
+            //dd($level1,$level2,$level3,$level4,$level5);
+            //统计每个等级次数
+            $level = [[$level1,$level2,$level3,$level4,$level5]];
+            $sheet1_header = [['单词','频数']];
+            $sheet2_header = [['1级','2级','3级','4级','5级']];
+            $sheet1 = array_merge($sheet1_header,$art_arr);
+            $sheet2 = array_merge($sheet2_header,$level);
+
+            Excel::create('词频统计',function($excel) use ($sheet1,$sheet2){
+                $excel->sheet('词频', function($sheet) use ($sheet1){
+                    $sheet->rows($sheet1);
+                });
+                $excel->sheet('级数', function($sheet) use ($sheet2){
+                    $sheet->rows($sheet2);
+                });
+            })->export('xls');
         }
-        dd('修改大小写');
     }
 }

@@ -31,19 +31,20 @@
                     </div>
                 </div>
                 <div class="ibox-content" style="height: 100%">
-                    <form method="post" class="form-horizontal" action="{{ url('admin/article/wordCount') }}">
+                    <form method="post" class="form-horizontal" action="{{ url('admin/article/wordCount') }}" id="dao_form">
                         {{ csrf_field() }}
                         <div class="form-group" style="height: 100%">
                             <label class="col-sm-2 control-label">文本黏贴</label>
                             <div class="col-sm-10" style="height: 100%">
-                                <textarea rows="20" cols="20" type="text" name="article" id="text" class="article form-control" style="width: 90%;height: 100%"></textarea>
+                                <textarea rows="20" cols="20" type="text" name="article_string" id="text" class="article form-control" style="width: 90%;height: 100%"></textarea>
+                                <input type="hidden" name="article" id="article" value="">
                             </div>
                         </div>
 
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit" id="tongji">词汇统计</button>
+                                <button class="btn btn-primary" type="button" id="tongji">词汇统计</button>
                             </div>
                         </div>
                     </form>
@@ -63,25 +64,12 @@
         $(document).ready(
                 function(){
                     $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
-                    document.getElementById("shi").onclick = function() {
 
+                    document.getElementById("tongji").onclick = function() {
                         var strContent = document.getElementById("text").value;
-                        $.ajax({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            url:"ppl",
-                            data:{'article':strContent},
-                            type:'post',
-                            success:function(data){
-                                console.log(1);
-                                //console.log(data);
-                                alert(1);
-                            }
-                        },JSON);
-                    };
-                    document.getElementById("dao").onclick = function() {
-                        var strContent = $('#show').html();
+                        strContent = strContent.replace(/\r\n/g, ' '); //IE9、FF、chrome
+                        strContent = strContent.replace(/\n/g, ' '); //IE7-8
+                        strContent = strContent.replace(/\s/g, ' ');
                         $('#article').val(strContent);
                         $('#dao_form').submit();
                     };
