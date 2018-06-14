@@ -16,6 +16,7 @@ class ArticleController extends Controller
 
     public function __construct()
     {
+        ini_set('memory_limit', '1024M');
         $this->jieba = new Jieba();
         $this->finalseg = new Finalseg();
 
