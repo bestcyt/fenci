@@ -154,4 +154,6 @@ class WordController extends Controller
 
         dd(Cache::get('words'));
     }
+
+
 }

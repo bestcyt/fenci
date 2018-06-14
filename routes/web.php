@@ -40,11 +40,13 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'auth'] , fun
     $route->post('word/store','WordController@store'); //保存词汇
 
     //功能1：文章分级标注并导出
-    $route->get('article/create','ArticleController@create'); //重传词汇
-    $route->get('article/test','ArticleController@test'); //重传词汇
-    $route->post('article/store','ArticleController@store'); //保存词汇
-    $route->post('article/ppl','ArticleController@ppl'); //保存词汇
-    $route->post('article/toWord','ArticleController@toWord'); //保存词汇
+    $route->get('article/create','ArticleController@create'); //文章界面
+    $route->get('article/test','ArticleController@test'); //测试功能用
+    $route->post('article/ppl','ArticleController@ppl'); //识别分词颜色
+    $route->post('article/toWord','ArticleController@toWord'); //导出word
+
+    //功能2：词频统计
+    $route->match(['get','post'],'article/wordCount','ArticleController@wordCount'); //统计词频界面 + 导出Excel
 
 });
 

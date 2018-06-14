@@ -70,6 +70,7 @@
                     <a href="#"><i class="fa fa-user"></i> <span class="nav-label">文章管理</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('admin/article/create') }}">分级标注</a></li>
+                        <li><a href="{{ url('admin/article/wordCount') }}">词频统计</a></li>
                     </ul>
                 </li>
                 <li>
