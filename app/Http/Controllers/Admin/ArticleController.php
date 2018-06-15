@@ -16,12 +16,7 @@ class ArticleController extends Controller
 
     public function __construct()
     {
-        ini_set('memory_limit', '1500M');
-        $this->jieba = new Jieba();
-        $this->finalseg = new Finalseg();
 
-        $this->jieba->init();
-        $this->finalseg->init();
     }
 
     //文本框界面，输入
@@ -31,7 +26,12 @@ class ArticleController extends Controller
     }
 
     public function ppl(Request $request){
+        ini_set('memory_limit', '1500M');
+        $this->jieba = new Jieba();
+        $this->finalseg = new Finalseg();
 
+        $this->jieba->init();
+        $this->finalseg->init();
         $article_string = $request->input('article');
         $jibie_string = $request->input('jibie');
 
