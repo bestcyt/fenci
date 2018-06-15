@@ -71,6 +71,7 @@
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('admin/article/create') }}">分级标注</a></li>
                         <li><a href="{{ url('admin/article/wordCount') }}">词频统计</a></li>
+                        <li><a href="{{ url('admin/article/wordMean') }}">段落释义</a></li>
                     </ul>
                 </li>
             </ul>

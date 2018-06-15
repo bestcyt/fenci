@@ -168,6 +168,8 @@ class WordController extends Controller
             });
         })->export('xls');
     }
+    
+
 
 
 
