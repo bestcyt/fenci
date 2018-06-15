@@ -2,7 +2,7 @@
 
 @section('css')
     <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
-
+    <link href="{{ asset('css/admin/at/jquery.atwho.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -58,7 +58,8 @@
 
 @section('js')
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-
+    <script src="{{ asset('js/admin/at/jquery.caret.min.js') }}"></script>
+    <script src="{{ asset('js/admin/at/jquery.atwho.min.js') }}"></script>
     <script>
 
         $(document).ready(
@@ -73,6 +74,9 @@
                         $('#article').val(strContent);
                         $('#dao_form').submit();
                     };
+
+
+
                 });
     </script>
 
