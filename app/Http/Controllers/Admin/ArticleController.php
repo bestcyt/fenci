@@ -203,6 +203,8 @@ class ArticleController extends Controller
                 $count++;
             }
             //for 里面unset 的话，会减少循环次数，说所以 再用一个变量来便是分词数组
+            //上面的匹配词汇 要换成stripos ，避免大小写问题
+            //使用新的Excel模板来
             dd($count,$time,array_values($article_fenci2));
         }
     }
