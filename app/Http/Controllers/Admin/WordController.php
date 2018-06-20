@@ -54,33 +54,40 @@ class WordController extends Controller
             $reader->noHeading(); //这一句
         })->get();
 
-        $ar = $array_all = [];
-        $time = date('Y-m-d H:m:i',time());
+        //重新录
+        $insert_array = $ar = [];
+
+        //整理成数组格式
         for ($i=0;$i<count($re);$i++){
-            for ($j=0;$j<count($re[$i]);$j++){
-                $ar[$i][$j]['word'] = trim($re[$i][$j][0]);
-                $ar[$i][$j]['mean'] = $re[$i][$j][1];
-                $ar[$i][$j]['level'] = $i+1;
-                $ar[$i][$j]['created_at'] = $time;
-            }
-            $array_all = array_merge($array_all,$ar[$i]);
-            DB::table('words')->insert($ar[$i]);
+            $tem = $re[$i]->toArray(); //集合转为数组
+            $ar[$i][0] = trim($tem[0]);
+            $ar[$i][1] = trim($tem[1]);
+            $ar[$i][2] = intval($tem[2]);
+            $ar[$i][3] = trim($tem[3]);
+            $ar[$i][4] = intval($tem[4]);
         }
-        foreach ($array_all as $array_one=>&$value){
+
+        //整理成插入数据库的格式
+        $time = date('Y-m-d H:m:i',time());
+        for ($i=0;$i<count($ar);$i++){
+            $insert_array[$i]['word'] = $ar[$i][0];
+            $insert_array[$i]['mean'] = $ar[$i][1];
+            $insert_array[$i]['level'] = $ar[$i][2];
+            $insert_array[$i]['zanwu'] = $ar[$i][3];
+            $insert_array[$i]['code'] = $ar[$i][4];
+            $insert_array[$i]['created_at'] = $time;
+        }
+
+        //插入数据库
+        DB::table('words')->insert($insert_array);
+
+        foreach ($insert_array as $array_one=>&$value){
             $value['id'] = $array_one+1;
         }
-        Cache::forever('words',$array_all);
-        /*
-         * array:1367 [▼
-              0 => array:4 [▶]
-              1 => array:4 [▶]
-              2 => array:4 [▼
-                "word" => "about"
-                "mean" => "ad. 大约；到处；四处 prep. 关于；在各处；四处 "
-                "level" => 1
-                "created_at" => "2018-06-10 07:06:27"
-              ]
-         */
+
+        //缓存词汇
+        Cache::forever('words',$insert_array);
+
         flash('导入成功','success')->important();
         return back();
     }
@@ -121,51 +128,29 @@ class WordController extends Controller
         dd(Cache::get('words'));
     }
 
+    //导出参数
     public function outExcel(){
-        $header = [['词汇','释义','等级']];
+        $header = [['词汇','释义','等级','编码']];
         $cihui = \Illuminate\Support\Facades\Cache::get('words');
         $sheet1 = $sheet2 = $sheet3 = $sheet4 = $sheet5 = [];
+
         for ($i=0;$i<count($cihui);$i++){
             unset($cihui[$i]['id']);
             unset($cihui[$i]['created_at']);
-            if ($cihui[$i]['level'] == 1){
-                $sheet1[$i] = $cihui[$i];
+            unset($cihui[$i]['zanwu']);
+            //导出Excel 如果第一个字母是 = ，那要再加个单引号才行
+            if (strpos($cihui[$i]['mean'],'=') == 0){
+                $cihui[$i]['mean'] = "'".$cihui[$i]['mean'];
             }
-            if ($cihui[$i]['level'] == 2){
-                $sheet2[$i] = $cihui[$i];
-            }
-            if ($cihui[$i]['level'] == 3){
-                $sheet3[$i] = $cihui[$i];
-            }
-            if ($cihui[$i]['level'] == 4){
-                $sheet4[$i] = $cihui[$i];
-            }
-            if ($cihui[$i]['level'] == 5){
-                $sheet5[$i] = $cihui[$i];
-            }
+            $sheet1[$i] = $cihui[$i];
         }
         $sheet1 = array_merge($header,$sheet1);
-        $sheet2 = array_merge($header,$sheet2);
-        $sheet3 = array_merge($header,$sheet3);
-        $sheet4 = array_merge($header,$sheet4);
-        $sheet5 = array_merge($header,$sheet5);
 
-        Excel::create('词汇库',function($excel) use ($sheet1,$sheet2,$sheet3,$sheet4,$sheet5){
-            $excel->sheet('1', function($sheet) use ($sheet1){
+        Excel::create('词汇库',function($excel) use ($sheet1){
+            $excel->sheet('词汇', function($sheet) use ($sheet1){
                 $sheet->rows($sheet1);
             });
-            $excel->sheet('2', function($sheet) use ($sheet2){
-                $sheet->rows($sheet2);
-            });
-            $excel->sheet('3', function($sheet) use ($sheet3){
-                $sheet->rows($sheet3);
-            });
-            $excel->sheet('4', function($sheet) use ($sheet4){
-                $sheet->rows($sheet4);
-            });
-            $excel->sheet('5', function($sheet) use ($sheet5){
-                $sheet->rows($sheet5);
-            });
+
         })->export('xls');
     }
     

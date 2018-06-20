@@ -36,11 +36,12 @@ class ArticleController extends Controller
         $jibie_string = $request->input('jibie');
 
         //带br的文章字符串，没有别的html标签
-        $article_string = str_replace('\r\n','<br>',$article_string);
+        //$article_string = str_replace('\r\n','<br>',$article_string);
 
         //分词，形成数组
         $article_fenci = $this->jieba->cut($article_string,false);
 
+        dd($article_fenci);
         //获取缓存词汇库
         $words = \Illuminate\Support\Facades\Cache::get('words');
 
@@ -196,16 +197,21 @@ class ArticleController extends Controller
             $count = $time = 0;
             for ($i=0;$i<count($article_fenci);$i++){
                 $article_fenci[$i] = trim($article_fenci[$i]);
+                //去除一些符号，
                 if (in_array($article_fenci[$i],[',','.','，','。','!','?'])){
                     $time++;
                     unset($article_fenci2[$i]);
                 }
                 $count++;
             }
+
+            $re_arr = array_values(array_unique($article_fenci2));//去重 重排后的数组
             //for 里面unset 的话，会减少循环次数，说所以 再用一个变量来便是分词数组
             //上面的匹配词汇 要换成stripos ，避免大小写问题
-            //使用新的Excel模板来
-            dd($count,$time,array_values($article_fenci2));
+            //使用新的Excel模板来  ， 这个可以不考虑唯一编码问题，因为各个词义不一样
+            return response()->json($re_arr);
+            //dd($count,$time,count($article_fenci2),$re_arr);
+            //然后使用$re_arr 生成一串的checkbox可勾选，勾选后，post后
         }
     }
 

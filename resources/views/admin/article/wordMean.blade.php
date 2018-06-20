@@ -105,7 +105,7 @@
                     <form method="post" class="form-horizontal" id="dao_form" action="{{ url('admin/article/toWord') }}">
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">分词标注结果</label>
+                            <label class="col-sm-2 control-label">选择词汇</label>
 
                             <div class="col-sm-10">
                                 <input type="hidden" name="article" value="" id="article">
@@ -152,8 +152,11 @@
                             type:'post',
                             success:function(data){
                                 console.log(1);
-                                //console.log(data);
-                                $('#show').html(data);
+                                var str = "";
+                                $.each(data,function (i,v) {
+                                    str += "<input type='checkbox' name="+v+" value="+v+">"+v+" ";
+                                });
+                                $('#show').html(str);
                             }
                         },JSON);
                     };

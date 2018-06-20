@@ -61,6 +61,7 @@
                                     <th>等级</th>
                                     <th>词汇</th>
                                     <th>释义</th>
+                                    <th>唯一编码</th>
                                     <th>更新时间</th>
                                     <th>操作</th>
                                 </tr>
@@ -72,6 +73,7 @@
                                         <td>{{ $val['level'] }}</td>
                                         <td>{{ $val['word'] }}</td>
                                         <td>{{ $val['mean'] }}</td>
+                                        <td>{{ $val['code'] }}</td>
                                         <td>{{ $val['created_at'] }}</td>
                                         {{--<td>--}}
                                             {{--<a href="{{ url('admin/city/'.$item->id.'/edit') }}" class="btn btn-xs btn-warning tooltips"  data-original-title="编辑" data-placement="top"><i class="fa fa-eye"></i></a>--}}

@@ -161,30 +161,6 @@
                         strContent = strContent.replace(/\r\n/g, '<br>'); //IE9、FF、chrome
                         strContent = strContent.replace(/\n/g, '<br>'); //IE7-8
                         strContent = strContent.replace(/\s/g, ' '); //空格处理
-//                        layer.confirm(title, {
-//                            btn: ['删除', '取消'],
-//                            icon: 5
-//                        },function(index){
-//                            var column_id = _item.children('.column_id').val();
-//                            $.ajax({
-//                                headers: {
-//                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                                },
-//                                url:"column/"+column_id,
-//                                data:{'_method':'delete'},
-//                                type:'post',
-//                                success:function(data){
-//                                    var data_obj = JSON.parse(data);
-//                                    if(data_obj.data == 1){
-//                                        layer.msg('删除成功');
-//                                        $("#"+column_id).remove();
-//                                    }else{
-//                                        layer.msg('删除失败');
-//                                    }
-//                                }
-//                            },JSON);
-//                            layer.close(index);
-//                        });
                         $.ajax({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
