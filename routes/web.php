@@ -58,5 +58,6 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'auth'] , fun
 
 //test
 Route::get('usersjson','TestController@getUserAt');
+Route::get('gettest','TestController@gettest');
 
 

@@ -41,15 +41,15 @@ class ArticleController extends Controller
         //分词，形成数组
         $article_fenci = $this->jieba->cut($article_string,false);
 
-        dd($article_fenci);
+        //dd($article_fenci);
         //获取缓存词汇库
         $words = \Illuminate\Support\Facades\Cache::get('words');
 
         $jibie = array_filter(explode(',',$jibie_string));
 
-        for ($i=0;$i<count($words);$i++){
-            for ($j=0;$j<count($article_fenci);$j++){
-                if ($words[$i]['word'] == $article_fenci[$j]){  //判断词汇是否匹配
+        for ($i=0;$i<count($words);$i++){//遍历全部缓存词汇
+            for ($j=0;$j<count($article_fenci);$j++){ //遍历结巴分词数组
+                if ((stripos($words[$i]['word'],$article_fenci[$j]) !== false) && (strlen($words[$i]['word']) == strlen($article_fenci[$j]))){  //判断词汇是否匹配
                     if (in_array($words[$i]['level'],$jibie)){ //判断需要显示的颜色是否在数组中
                         if ($words[$i]['level'] == 1){
                             $article_fenci[$j] = "<span style='color: red'>$article_fenci[$j]</span>";
@@ -82,7 +82,7 @@ class ArticleController extends Controller
                 $article .= $article_fenci[$j].' ';
             }
         }
-        return json_encode($article,JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return response()->json($article);
     }
 
     //词汇分词导出word
