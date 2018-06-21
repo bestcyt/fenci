@@ -39,37 +39,6 @@
                                 <textarea rows="20" cols="20" type="text" name="article" id="text" class="article form-control" style="width: 90%;height: 100%"></textarea>
                             </div>
                         </div>
-
-                        <div class="hr-line-dashed"></div>
-                            <div class="form-group" hidden>
-                                <label class="col-sm-2 control-label">显示级别</label>
-                                <div class="col-sm-10" >
-                                    <label class="checkbox-inline i-checks">
-                                        <div class="icheckbox_square-green" style="position: relative;">
-                                            <input checked type="checkbox" id="check1" value="1" style="position: absolute; opacity: 0;">
-                                            <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                        </div>
-                                        1级</label>
-                                    <label class="checkbox-inline i-checks">
-                                        <div class="icheckbox_square-green" style="position: relative;">
-                                            <input checked type="checkbox" id="check2"  value="2" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                        2级</label>
-                                    <label class="checkbox-inline i-checks">
-                                        <div class="icheckbox_square-green" style="position: relative;">
-                                            <input checked type="checkbox" id="check3"  value="3" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                        3级</label>
-                                    <label class="checkbox-inline i-checks">
-                                        <div class="icheckbox_square-green" style="position: relative;">
-                                            <input checked type="checkbox" id="check4" value="4" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                        4级</label>
-                                    <label class="checkbox-inline i-checks">
-                                        <div class="icheckbox_square-green" style="position: relative;">
-                                            <input checked type="checkbox" id="check5" value="5" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                        5级</label>
-                                </div>
-                            </div>
-
-                        <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="button" id="chong">去重分词</button>
@@ -102,13 +71,13 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <form method="post" class="form-horizontal" id="dao_form" action="{{ url('admin/article/toWord') }}">
+                    <form method="post" class="form-horizontal" id="dao_form" action="{{ url('admin/article/toWordMean') }}">
                         {{ csrf_field() }}
                         <div class="form-group">
                             <label class="col-sm-2 control-label">选择词汇</label>
 
                             <div class="col-sm-10">
-                                <input type="hidden" name="article" value="" id="article">
+                                <input type="hidden" name="article_string" value="" id="article_string">
                                 <div id="show" style="width: 100%;height: 400px;overflow: auto" >
 
                                 </div>
@@ -156,13 +125,16 @@
                                 $.each(data,function (i,v) {
                                     str += "<input type='checkbox' name="+v+" value="+v+">"+v+" ";
                                 });
-                                $('#show').html(str);
+                                $('#show').html(str); //将选择的CheckBox放进show
                             }
                         },JSON);
                     };
                     document.getElementById("dao").onclick = function() {
-                        var strContent = $('#show').html();
-                        $('#article').val(strContent);
+                        var strContent = document.getElementById("text").value;
+                        strContent = strContent.replace(/\r\n/g, '<br>'); //IE9、FF、chrome
+                        strContent = strContent.replace(/\n/g, '<br>'); //IE7-8
+                        strContent = strContent.replace(/\s/g, ' '); //空格处理
+                        $('#article_string').val(strContent);
                         $('#dao_form').submit();
                     };
                 });

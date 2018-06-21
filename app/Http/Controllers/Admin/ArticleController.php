@@ -215,4 +215,56 @@ class ArticleController extends Controller
         }
     }
 
+    //段落释义导出word
+    public function toWordMean(Request $request){
+        $get_word = $request->all();
+
+        //原文段落
+        $article_str = $get_word['article_string'];
+
+        //原文的分词数组
+        $article_cut = Jieba::cut($article_str);
+
+        unset($get_word['_token']);
+        unset($get_word['article_string']);
+
+        //选择的CheckBox数组 0,1,2
+        $get_word = array_values($get_word);
+
+        //缓存的全部词汇数组
+        $words = \Illuminate\Support\Facades\Cache::get('words');
+
+        //给原文 选中的词汇 加粗 加序号
+        for ($i=0;$i<count($article_cut);$i++){//遍历全部缓存词汇
+            for ($j=0;$j<count($get_word);$j++){ //遍历结巴分词数组
+                if ((stripos($article_cut[$i],$get_word[$j]) !== false) && (strlen($article_cut[$i]) == strlen($get_word[$j]))){  //判断词汇是否匹配
+                    $article_cut[$j] = "<b>$get_word[$j]<span style='color: red'>($j)</span></b>";
+                }
+            }
+        }
+
+        //拼接 加粗后的文章
+        $article = '';
+        for ($j=0;$j<count($article_cut);$j++){
+            if (preg_match("/[\x7f-\xff]/",$article_cut[$j])){
+                $article .= $article_cut[$j];
+            }else{
+
+                if ($article_cut[$j] == 'br'){
+                    $article_cut[$j] = '<br>';
+                }
+                $article .= $article_cut[$j].' ';
+            }
+        }
+        header("Content-Type: application/msword");
+        header("Content-Disposition: attachment; filename=doc.doc"); //指定文件名称
+        header("Pragma: no-cache");
+        header("Expires: 0");
+        $html = '<table border="1" cellspacing="0" cellpadding="0" width="90%" align="center"></table>';
+        $html .= $article;
+
+        //再接上表格
+
+        echo $html ;
+    }
 }

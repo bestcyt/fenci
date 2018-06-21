@@ -53,8 +53,6 @@ class TestController extends Controller
             foreach ($some as $word)
             {
                 $arr[] = $word['word'];
-            //      print_r($word);
-            //      exit();
             }
         }
 
