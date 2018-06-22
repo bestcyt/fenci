@@ -41,7 +41,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="button" id="chong">去重分词</button>
+                                <button class="btn btn-primary" type="button" id="chong">筛选词汇</button>
                             </div>
                         </div>
                     </form>
@@ -102,7 +102,6 @@
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
     <script>
-
         $(document).ready(
                 function(){
                     $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
@@ -120,11 +119,21 @@
                             data:{'article':strContent,'type':'ppl'},
                             type:'post',
                             success:function(data){
-                                console.log(1);
-                                var str = "";
+                                var str = "<table class='table table-bordered'>";
+                                //根据返回的去重后的数组，拼接table
                                 $.each(data,function (i,v) {
-                                    str += "<input type='checkbox' name="+v+" value="+v+">"+v+" ";
+                                    console.log(i);
+                                    if ( (i)%5 == 0 && !(i%2 == 0)){
+                                        str += "<tr>";
+                                        str += "<td>"+"<input type='checkbox' name="+v+" value="+v+">"+v+"<br>"+"</td>";
+                                    }else if ( (i+1)%5 == 0 && ((i+1)%2 == 0)){
+                                        str += "<td>"+"<input type='checkbox' name="+v+" value="+v+">"+v+"<br>"+"</td>";
+                                        str += "</tr>";
+                                    }else {
+                                        str += "<td>"+"<input type='checkbox' name="+v+" value="+v+">"+v+"<br>"+"</td>";
+                                    }
                                 });
+                                str += "</table>";
                                 $('#show').html(str); //将选择的CheckBox放进show
                             }
                         },JSON);

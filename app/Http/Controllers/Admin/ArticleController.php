@@ -204,19 +204,19 @@ class ArticleController extends Controller
                 }
                 $count++;
             }
-            //将词汇转为小写
+
+            //将词汇转为小写,防止去重的时候没有区分大小写
             array_walk($article_fenci2, function(&$value)
             {
                 $value = strtolower($value);
             });
 
-            $re_arr = array_values(array_unique($article_fenci2));//去重 重排后的数组
-            //for 里面unset 的话，会减少循环次数，说所以 再用一个变量来便是分词数组
-            //上面的匹配词汇 要换成stripos ，避免大小写问题
-            //使用新的Excel模板来  ， 这个可以不考虑唯一编码问题，因为各个词义不一样
+            //去重 重排后的数组
+            $re_arr = array_values(array_unique($article_fenci2));
+
+            //使用response 可以防止多了双引号
             return response()->json($re_arr);
-            //dd($count,$time,count($article_fenci2),$re_arr);
-            //然后使用$re_arr 生成一串的checkbox可勾选，勾选后，post后
+
         }
     }
 
@@ -230,8 +230,6 @@ class ArticleController extends Controller
 
         //原文的分词数组
         $article_cut = Jieba::cut($article_str);
-
-
 
         //去除数组中不需要的，保留选择的词汇数组
         unset($get_word['_token']);
@@ -260,7 +258,6 @@ class ArticleController extends Controller
             if (preg_match("/[\x7f-\xff]/",$article_cut[$j])){
                 $article .= $article_cut[$j];
             }else{
-
                 if ($article_cut[$j] == 'br'){
                     $article_cut[$j] = '<br>';
                 }
