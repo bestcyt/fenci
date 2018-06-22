@@ -204,6 +204,11 @@ class ArticleController extends Controller
                 }
                 $count++;
             }
+            //将词汇转为小写
+            array_walk($article_fenci2, function(&$value)
+            {
+                $value = strtolower($value);
+            });
 
             $re_arr = array_values(array_unique($article_fenci2));//去重 重排后的数组
             //for 里面unset 的话，会减少循环次数，说所以 再用一个变量来便是分词数组
@@ -217,6 +222,7 @@ class ArticleController extends Controller
 
     //段落释义导出word
     public function toWordMean(Request $request){
+        //获取提交的信息 包括文章+CheckBox词汇
         $get_word = $request->all();
 
         //原文段落
@@ -225,10 +231,13 @@ class ArticleController extends Controller
         //原文的分词数组
         $article_cut = Jieba::cut($article_str);
 
+
+
+        //去除数组中不需要的，保留选择的词汇数组
         unset($get_word['_token']);
         unset($get_word['article_string']);
 
-        //选择的CheckBox数组 0,1,2
+        //词汇数组重新整理键值 0,1,2
         $get_word = array_values($get_word);
 
         //缓存的全部词汇数组
@@ -237,13 +246,15 @@ class ArticleController extends Controller
         //给原文 选中的词汇 加粗 加序号
         for ($i=0;$i<count($article_cut);$i++){//遍历全部缓存词汇
             for ($j=0;$j<count($get_word);$j++){ //遍历结巴分词数组
-                if ((stripos($article_cut[$i],$get_word[$j]) !== false) && (strlen($article_cut[$i]) == strlen($get_word[$j]))){  //判断词汇是否匹配
-                    $article_cut[$j] = "<b>$get_word[$j]<span style='color: red'>($j)</span></b>";
+                //判断词汇是否匹配
+                if ((stripos($article_cut[$i],$get_word[$j]) !== false) && (strlen($article_cut[$i]) == strlen($get_word[$j]))){
+                    $num = $j+1; //记录序号
+                    $article_cut[$i] = "<b>$get_word[$j]<span style='color: #ff7c6e'>($num)</span></b>";//加粗并给标记上红色
                 }
             }
         }
 
-        //拼接 加粗后的文章
+        //整理加粗后的数组，拼接为文章
         $article = '';
         for ($j=0;$j<count($article_cut);$j++){
             if (preg_match("/[\x7f-\xff]/",$article_cut[$j])){
@@ -256,12 +267,53 @@ class ArticleController extends Controller
                 $article .= $article_cut[$j].' ';
             }
         }
+
+        //整理选择的词汇数组，根据词汇库读取信息序号，词汇，注释，级别 （需要用缓存的匹配组成新数组）
+        $fin_word = [];
+        for ($j=0;$j<count($get_word);$j++){
+            $fin_word[$j]['word'] = $get_word[$j];
+        }
+
+        for ($j=0;$j<count($fin_word);$j++){
+            for ($i=0;$i<count($words);$i++){
+                if ((stripos($words[$i]['word'],$fin_word[$j]['word']) !== false) && (strlen($words[$i]['word']) == strlen($fin_word[$j]['word']))){
+//                if ($fin_word[$j]['word'] == $words[$i]['word']){
+                    $fin_word[$j]['mean'] = $words[$i]['mean'];
+                    $fin_word[$j]['level'] = $words[$i]['level'];
+                    $fin_word[$j]['code'] = $words[$i]['code'];
+                }
+            }
+        }
+
+        //dd($fin_word,$get_word);
+
+        //拼接表格内容
+        $table = "<table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" width=\"90%\" align=\"center\">";
+        $table .= '<tr><td>序号</td><td>词汇</td><td>释义</td><td>级别</td></tr>';
+
+        for ($i=0;$i<count($fin_word);$i++){
+            $num = $i+1;
+            $word = $fin_word[$i]['word'] ?? '';
+            $mean = $fin_word[$i]['mean'] ?? '';
+            $level = $fin_word[$i]['level'] ?? '';
+            $table .= '<tr>';
+            $table .= "<td>$num</td>";
+            $table .= "<td>$word</td>";
+            $table .= "<td>$mean</td>";
+            $table .= "<td>$level</td>";
+            $table .= '</tr>';
+        }
+        $table .= "</table>";
+
+
+        //导出word
         header("Content-Type: application/msword");
         header("Content-Disposition: attachment; filename=doc.doc"); //指定文件名称
         header("Pragma: no-cache");
         header("Expires: 0");
         $html = '<table border="1" cellspacing="0" cellpadding="0" width="90%" align="center"></table>';
         $html .= $article;
+        $html .= $table;
 
         //再接上表格
 
