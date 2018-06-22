@@ -42,9 +42,7 @@ class HomeController extends Controller
                 }
             }
         }
-
         $get = array_values($get);
-
 
         $table = "<table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" width=\"90%\" align=\"center\">";
         for ($i=0;$i<count($getword);$i++){
