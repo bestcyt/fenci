@@ -54,7 +54,7 @@
                         @include('flash::message')
 {{--                        <form action="{{ url('admin/w/order') }}" method="post" id="order_form">--}}
                             {{--{{ csrf_field() }}--}}
-                            <table class="footable table table-striped table-bordered table-hover" data-paging-position="right" data-filter=#filter data-paging="true" data-paging-size="10" >
+                            <table class="footable table table-striped table-bordered table-hover" data-paging-position="right" data-filter=#filter data-paging="true" data-paging-size="20" >
                                 <thead>
                                 <tr>
                                     <th>#</th>
