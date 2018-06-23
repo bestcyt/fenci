@@ -158,8 +158,8 @@
                         }
                         console.log(jibie);
                         var strContent = document.getElementById("text").value;
-                        strContent = strContent.replace(/\r\n/g, '<br>'); //IE9、FF、chrome
-                        strContent = strContent.replace(/\n/g, '<br>'); //IE7-8
+                        strContent = strContent.replace(/\r\n/g, ' br '); //IE9、FF、chrome
+                        strContent = strContent.replace(/\n/g, ' br '); //IE7-8
                         strContent = strContent.replace(/\s/g, ' '); //空格处理
                         $.ajax({
                             headers: {

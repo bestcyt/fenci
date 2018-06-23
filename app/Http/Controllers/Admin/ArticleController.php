@@ -38,6 +38,7 @@ class ArticleController extends Controller
         return view('admin.article.create');
     }
 
+    //级别分词
     public function ppl(Request $request){
 
         $article_string = $request->input('article');
@@ -47,9 +48,16 @@ class ArticleController extends Controller
         //$article_string = str_replace('\r\n','<br>',$article_string);
 
         //分词，形成数组
-        $article_fenci = $this->jieba->cut($article_string,false);
-
-        //dd($article_fenci);
+        //$article_fenci = $this->jieba->cut($article_string,false);
+        $article_fenci = [];
+        $this->pscws->send_text($article_string);
+        while ($some = $this->pscws->get_result())
+        {
+            foreach ($some as $word)
+            {
+                $article_fenci[] = $word['word'];
+            }
+        }
         //获取缓存词汇库
         $words = \Illuminate\Support\Facades\Cache::get('words');
 
@@ -101,7 +109,7 @@ class ArticleController extends Controller
         header("Pragma: no-cache");
         header("Expires: 0");
         $html = '<table border="1" cellspacing="2" cellpadding="2" width="90%" align="center"></table>';
-        echo $html .$article_string.'';
+        echo $html .$article_string;
     }
 
     //不知道为什么加table才行
@@ -123,14 +131,32 @@ class ArticleController extends Controller
             return view('admin.article.wordCount');
         }
         if ($request->method() == 'POST'){
-            //分词，形成数组
-            $article = Jieba::cut($request->input('article'),false);
-
             //获取缓存词汇库
             $words = \Illuminate\Support\Facades\Cache::get('words');
+            //分词，形成数组
+            //$article = Jieba::cut($request->input('article'),false);
+            $article = [];
+            $this->pscws->send_text($request->input('article'));
+            while ($some = $this->pscws->get_result())
+            {
+                foreach ($some as $word)
+                {
+                    $article[] = $word['word'];
+                }
+            }
+
+            //去除标点符号
+            for ($i=0;$i<count($article);$i++){
+                $article[$i] = trim($article[$i]);
+                //去除一些符号，
+                if (in_array($article[$i],['"',',','.','，','。','!','?','(',')','《','》','（','）'])){
+                    unset($article[$i]);
+                }
+            }
 
             //先对提交的文章去重复，再重新排键值，times=该单词的个数
-            $article_unique = array_values(array_unique($article));
+            $article_values = array_values($article); //初始去除符号后的分词结果重排键值
+            $article_unique = array_values(array_unique($article));//初始去除符号后的分词结果重排键值+去重
 
             //循环统计值，修改数组结果，再遍历唯一编码
             $art_arr = [];
@@ -139,10 +165,12 @@ class ArticleController extends Controller
                 $art_arr[$i]['times'] = 0;
             }
 
-            //统计去重后的文章的各个单词的个数
-            for ($i=0;$i<count($article);$i++){
+            //统计去重后的文章的各个单词的个数 频数
+            $cipings = array_count_values($article_values);//本想用函数的，但是还是得两次循环才能写进频数，就放弃了
+
+            for ($i=0;$i<count($article_values);$i++){
                 for ($j=0;$j<count($article_unique);$j++){
-                    if ($article[$i] == $article_unique[$j]){  //判断词汇是否匹配
+                    if (strtolower($article_values[$i]) == strtolower($article_unique[$j])){  //判断词汇是否匹配
                         $art_arr[$j]['times'] ++;
                     }
                 }
@@ -150,9 +178,10 @@ class ArticleController extends Controller
 
             //统计文章词汇各个等级的个数
             $level1 = $level2 = $level3 = $level4 = $level5 = 0;
+            $t2 = 0;
             for ($i=0;$i<count($words);$i++){
-                for ($j=0;$j<count($article);$j++){
-                    if ($words[$i]['word'] == $article[$j]){  //判断词汇是否匹配
+                for ($j=0;$j<count($article_values);$j++){
+                    if ( strtolower($words[$i]['word']) == strtolower($article_values[$j])){  //判断词汇是否匹配
                         if ($words[$i]['level'] == 1){
                             $level1 ++;
                         }
@@ -168,11 +197,11 @@ class ArticleController extends Controller
                         if ($words[$i]['level'] == 5){
                             $level5 ++;
                         }
+                        $t2++;
                     }
                 }
             }
 
-            //dd($level1,$level2,$level3,$level4,$level5);
             //统计每个等级次数
             $level = [[$level1,$level2,$level3,$level4,$level5]];
             $sheet1_header = [['单词','频数']];
