@@ -8,20 +8,28 @@ use Illuminate\Filesystem\Cache;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Help\scws\PSCWS4;
 
 class ArticleController extends Controller
 {
     public $jieba;
     public $finalseg;
 
+    public $pscws;
+
     public function __construct()
     {
-        ini_set('memory_limit', '1500M');
-        $this->jieba = new Jieba();
-        $this->finalseg = new Finalseg();
+//        ini_set('memory_limit', '1500M');
+//        $this->jieba = new Jieba();
+//        $this->finalseg = new Finalseg();
+//
+//        $this->jieba->init();
+//        $this->finalseg->init();
 
-        $this->jieba->init();
-        $this->finalseg->init();
+        $this->pscws = new PSCWS4('utf8');
+        $this->pscws->set_charset('utf-8');
+        $this->pscws->set_dict(public_path().'/dict.utf8.xdb');
+        $this->pscws->set_rule(public_path().'/rules.ini');
     }
 
     //文本框界面，输入
@@ -192,13 +200,22 @@ class ArticleController extends Controller
         }
         if ($request->method() == 'POST' && $request->input('type') == 'ppl'){
             //ajax提交，返回分词结果
-            $article_fenci = $article_fenci2 = $this->jieba->cut($request->input('article'),false);
+            $article_fenci = $article_fenci2 = [];
+           // $article_fenci = $article_fenci2 = $this->jieba->cut($request->input('article'),false);
+            $this->pscws->send_text($request->input('article'));
+            while ($some = $this->pscws->get_result())
+            {
+                foreach ($some as $word)
+                {
+                    $article_fenci[] = $article_fenci2[] = $word['word'];
+                }
+            }
 
             $count = $time = 0;
             for ($i=0;$i<count($article_fenci);$i++){
                 $article_fenci[$i] = trim($article_fenci[$i]);
                 //去除一些符号，
-                if (in_array($article_fenci[$i],[',','.','，','。','!','?'])){
+                if (in_array($article_fenci[$i],['"',',','.','，','。','!','?','(',')','《','》','（','）'])){
                     $time++;
                     unset($article_fenci2[$i]);
                 }
@@ -229,8 +246,18 @@ class ArticleController extends Controller
         $article_str = $get_word['article_string'];
 
         //原文的分词数组
-        $article_cut = Jieba::cut($article_str);
 
+        //切换为scws分词法
+        //$article_cut = Jieba::cut($article_str);
+        $article_cut = [];
+        $this->pscws->send_text($article_str);
+        while ($some = $this->pscws->get_result())
+        {
+            foreach ($some as $word)
+            {
+                $article_cut[] = $word['word'];
+            }
+        }
         //去除数组中不需要的，保留选择的词汇数组
         unset($get_word['_token']);
         unset($get_word['article_string']);
@@ -252,6 +279,7 @@ class ArticleController extends Controller
             }
         }
 
+        //dd($article_cut);
         //整理加粗后的数组，拼接为文章
         $article = '';
         for ($j=0;$j<count($article_cut);$j++){
@@ -274,7 +302,6 @@ class ArticleController extends Controller
         for ($j=0;$j<count($fin_word);$j++){
             for ($i=0;$i<count($words);$i++){
                 if ((stripos($words[$i]['word'],$fin_word[$j]['word']) !== false) && (strlen($words[$i]['word']) == strlen($fin_word[$j]['word']))){
-//                if ($fin_word[$j]['word'] == $words[$i]['word']){
                     $fin_word[$j]['mean'] = $words[$i]['mean'];
                     $fin_word[$j]['level'] = $words[$i]['level'];
                     $fin_word[$j]['code'] = $words[$i]['code'];
@@ -282,7 +309,6 @@ class ArticleController extends Controller
             }
         }
 
-        //dd($fin_word,$get_word);
 
         //拼接表格内容
         $table = "<table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" width=\"90%\" align=\"center\">";

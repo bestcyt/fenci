@@ -108,8 +108,8 @@
                     document.getElementById("chong").onclick = function() {
                         //提交选择的单词后，怎么在原本的文章上润色呢？缓存吗
                         var strContent = document.getElementById("text").value;
-                        strContent = strContent.replace(/\r\n/g, '<br>'); //IE9、FF、chrome
-                        strContent = strContent.replace(/\n/g, '<br>'); //IE7-8
+                        strContent = strContent.replace(/\r\n/g, ' br '); //IE9、FF、chrome
+                        strContent = strContent.replace(/\n/g, ' br '); //IE7-8
                         strContent = strContent.replace(/\s/g, ' '); //空格处理
                         $.ajax({
                             headers: {
@@ -140,8 +140,8 @@
                     };
                     document.getElementById("dao").onclick = function() {
                         var strContent = document.getElementById("text").value;
-                        strContent = strContent.replace(/\r\n/g, '<br>'); //IE9、FF、chrome
-                        strContent = strContent.replace(/\n/g, '<br>'); //IE7-8
+                        strContent = strContent.replace(/\r\n/g, ' br '); //IE9、FF、chrome
+                        strContent = strContent.replace(/\n/g, ' br '); //IE7-8
                         strContent = strContent.replace(/\s/g, ' '); //空格处理
                         $('#article_string').val(strContent);
                         $('#dao_form').submit();
