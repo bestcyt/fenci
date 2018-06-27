@@ -10,6 +10,11 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class WordController extends Controller
 {
+
+   public function __construct(){
+       ini_set('max_execution_time', '0');
+   }
+
     /**
      * Display a listing of the resource.
      *
