@@ -259,7 +259,7 @@ class ArticleController extends Controller
             for ($i=0;$i<count($article_fenci);$i++){
                 $article_fenci[$i] = trim($article_fenci[$i]);
                 //去除一些符号，
-                if (in_array($article_fenci[$i],['"',',','.','，','。','!','?','(',')','《','》','（','）'])){
+                if (in_array($article_fenci[$i],['"',',','.','，','。','!','?','(',')','《','》','（','）',']','['])){
                     $time++;
                     unset($article_fenci2[$i]);
                 }
@@ -275,17 +275,43 @@ class ArticleController extends Controller
             //去重 重排后的数组
             $re_arr = array_values(array_unique($article_fenci2));
 
-            //使用response 可以防止多了双引号
-            return response()->json($re_arr);
+            //分成5个级别的数组
+            $words = Cache::get('words');
+            $re1 = $re2 = $re3 = $re4 = $re5 = [];
+            for ($i=0;$i<count($words);$i++){
+                for ($j=0;$j<count($re_arr);$j++){
+                    if (strtolower($words[$i]['word']) == $re_arr[$j]){
+                        if ($words[$i]['level'] == 1){
+                            $re1[] = $re_arr[$j];
+                        }
+                        if ($words[$i]['level'] == 2){
+                            $re2[] = $re_arr[$j];
+                        }
+                        if ($words[$i]['level'] == 3){
+                            $re3[] = $re_arr[$j];
+                        }
+                        if ($words[$i]['level'] == 4){
+                            $re4[] = $re_arr[$j];
+                        }
+                        if ($words[$i]['level'] == 5){
+                            $re5[] = $re_arr[$j];
+                        }
+                    }
+                }
+            }
+            //dd([$re1,$re2,$re3,$re4,$re5]);
 
+            //使用response 可以防止多了双引号
+            return response()->json([$re1,$re2,$re3,$re4,$re5]);
         }
     }
 
     //段落释义导出word
     public function toWordMean(Request $request){
+
         //获取提交的信息 包括文章+CheckBox词汇
         $get_word = $request->all();
-
+        //dd($request);
         //原文段落
         $article_str = $get_word['article_string'];
 
@@ -310,20 +336,27 @@ class ArticleController extends Controller
         $get_word = array_values($get_word);
 
         //缓存的全部词汇数组
-        $words = \Illuminate\Support\Facades\Cache::get('words');
+        $words = Cache::get('words');
 
-        //给原文 选中的词汇 加粗 加序号
-        for ($i=0;$i<count($article_cut);$i++){//遍历全部缓存词汇
-            for ($j=0;$j<count($get_word);$j++){ //遍历结巴分词数组
-                //判断词汇是否匹配
-                if ((stripos($article_cut[$i],$get_word[$j]) !== false) && (strlen($article_cut[$i]) == strlen($get_word[$j]))){
-                    $num = $j+1; //记录序号
-                    $article_cut[$i] = "<b>$get_word[$j]<span style='color: #ff7c6e'>($num)</span></b>";//加粗并给标记上红色
-                }
+
+        //根据文章关键词的顺序，重新将关键词排序，为了序号从1开始，用了ksort
+        $key_word = [];
+        for ($j=0;$j<count($get_word);$j++){ //遍历分词数组
+            //判断词汇是否匹配
+            if ($key = array_search($get_word[$j],$article_cut)){
+                $key_word[$key] = $article_cut[$key];
+            }
+        }
+        ksort($key_word);  //根据键 来排序
+        $key_word = array_values($key_word);
+        for ($j=0;$j<count($key_word);$j++){ //遍历分词数组
+            //判断词汇是否匹配
+            if ($key = array_search($key_word[$j],$article_cut)){
+                $num = $j+1; //记录序号
+                $article_cut[$key] = "<b>$article_cut[$key]<span style='color: #ff7c6e'>($num)</span></b>";//加粗并给标记上红色
             }
         }
 
-        //dd($article_cut);
         //整理加粗后的数组，拼接为文章
         $article = '';
         for ($j=0;$j<count($article_cut);$j++){
@@ -339,10 +372,9 @@ class ArticleController extends Controller
 
         //整理选择的词汇数组，根据词汇库读取信息序号，词汇，注释，级别 （需要用缓存的匹配组成新数组）
         $fin_word = [];
-        for ($j=0;$j<count($get_word);$j++){
-            $fin_word[$j]['word'] = $get_word[$j];
+        for ($j=0;$j<count($key_word);$j++){
+            $fin_word[$j]['word'] = $key_word[$j];
         }
-
         for ($j=0;$j<count($fin_word);$j++){
             for ($i=0;$i<count($words);$i++){
                 if ((stripos($words[$i]['word'],$fin_word[$j]['word']) !== false) && (strlen($words[$i]['word']) == strlen($fin_word[$j]['word']))){
@@ -356,17 +388,18 @@ class ArticleController extends Controller
 
         //拼接表格内容
         $table = "<table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" width=\"90%\" align=\"center\">";
-        $table .= '<tr><td>序号</td><td>词汇</td><td>释义</td><td>级别</td></tr>';
-
+        $table .= '<tr><td>序号</td><td>词汇</td><td>释义</td><td>暂无</td><td>级别</td></tr>';
         for ($i=0;$i<count($fin_word);$i++){
             $num = $i+1;
             $word = $fin_word[$i]['word'] ?? '';
             $mean = $fin_word[$i]['mean'] ?? '';
+            $zanwu = $fin_word[$i]['zanwu'] ?? '';
             $level = $fin_word[$i]['level'] ?? '';
             $table .= '<tr>';
             $table .= "<td>$num</td>";
             $table .= "<td>$word</td>";
             $table .= "<td>$mean</td>";
+            $table .= "<td>$zanwu</td>";
             $table .= "<td>$level</td>";
             $table .= '</tr>';
         }
