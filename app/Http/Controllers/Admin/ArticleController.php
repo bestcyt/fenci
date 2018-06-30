@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use Fukuball\Jieba\Finalseg;
 use Fukuball\Jieba\Jieba;
-use Illuminate\Filesystem\Cache;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Help\scws\PSCWS4;
+use Illuminate\Support\Facades\Cache;
 
 class ArticleController extends Controller
 {
@@ -34,8 +34,8 @@ class ArticleController extends Controller
 
     //文本框界面，输入
     public function create(){
-
-        return view('admin.article.create');
+        $levels = Cache::get('levels');
+        return view('admin.article.create',['levels'=>$levels]);
     }
 
     //级别分词
@@ -43,12 +43,13 @@ class ArticleController extends Controller
 
         $article_string = $request->input('article');
         $jibie_string = $request->input('jibie');
+        $level_string = $request->input('level_str');
 
-        //带br的文章字符串，没有别的html标签
-        //$article_string = str_replace('\r\n','<br>',$article_string);
+        //获得级别颜色，并添加缓存
+        $levels_arr = array_filter(explode(',',$level_string));
+        Cache::forever('levels',$levels_arr);
 
         //分词，形成数组
-        //$article_fenci = $this->jieba->cut($article_string,false);
         $article_fenci = [];
         $this->pscws->send_text($article_string);
         while ($some = $this->pscws->get_result())
@@ -68,19 +69,19 @@ class ArticleController extends Controller
                 if ((stripos($words[$i]['word'],$article_fenci[$j]) !== false) && (strlen($words[$i]['word']) == strlen($article_fenci[$j]))){  //判断词汇是否匹配
                     if (in_array($words[$i]['level'],$jibie)){ //判断需要显示的颜色是否在数组中
                         if ($words[$i]['level'] == 1){
-                            $article_fenci[$j] = "<span style='color: red'>$article_fenci[$j]</span>";
+                            $article_fenci[$j] = "<span style='color: $levels_arr[0]'>$article_fenci[$j]</span>";
                         }
                         if ($words[$i]['level'] == 2){
-                            $article_fenci[$j] = "<span style='color: blue'>$article_fenci[$j]</span>";
+                            $article_fenci[$j] = "<span style='color: $levels_arr[1]'>$article_fenci[$j]</span>";
                         }
                         if ($words[$i]['level'] == 3){
-                            $article_fenci[$j] = "<span style='color: green'>$article_fenci[$j]</span>";
+                            $article_fenci[$j] = "<span style='color: $levels_arr[2]'>$article_fenci[$j]</span>";
                         }
                         if ($words[$i]['level'] == 4){
-                            $article_fenci[$j] = "<span style='color: yellow'>$article_fenci[$j]</span>";
+                            $article_fenci[$j] = "<span style='color: $levels_arr[3]'>$article_fenci[$j]</span>";
                         }
                         if ($words[$i]['level'] == 5){
-                            $article_fenci[$j] = "<span style='color: brown'>$article_fenci[$j]</span>";
+                            $article_fenci[$j] = "<span style='color: $levels_arr[4]'>$article_fenci[$j]</span>";
                         }
                     }
                 }
