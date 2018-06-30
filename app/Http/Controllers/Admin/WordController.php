@@ -46,6 +46,7 @@ class WordController extends Controller
     public function store(Request $request)
     {
         //
+        set_time_limit(0);
 
         DB::table('words')->truncate();
 
@@ -54,6 +55,7 @@ class WordController extends Controller
             $reader->noHeading(); //这一句
         })->get();
 
+        //dd(count($re));
         //重新录
         $insert_array = $ar = [];
 
