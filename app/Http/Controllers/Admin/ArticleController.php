@@ -381,6 +381,7 @@ class ArticleController extends Controller
                     $fin_word[$j]['mean'] = $words[$i]['mean'];
                     $fin_word[$j]['level'] = $words[$i]['level'];
                     $fin_word[$j]['code'] = $words[$i]['code'];
+                    $fin_word[$j]['zanwu'] = $words[$i]['zanwu'];
                 }
             }
         }
@@ -388,18 +389,20 @@ class ArticleController extends Controller
 
         //拼接表格内容
         $table = "<table border=\"1\" cellspacing=\"0\" cellpadding=\"0\" width=\"90%\" align=\"center\">";
-        $table .= '<tr><td>序号</td><td>词汇</td><td>释义</td><td>暂无</td><td>级别</td></tr>';
+        $table .= '<tr><td>序号</td><td>词汇</td><td>释义</td><td>暂无</td><td>编码</td><td>级别</td></tr>';
         for ($i=0;$i<count($fin_word);$i++){
             $num = $i+1;
             $word = $fin_word[$i]['word'] ?? '';
             $mean = $fin_word[$i]['mean'] ?? '';
             $zanwu = $fin_word[$i]['zanwu'] ?? '';
+            $code = $fin_word[$i]['code'] ?? '';
             $level = $fin_word[$i]['level'] ?? '';
             $table .= '<tr>';
             $table .= "<td>$num</td>";
             $table .= "<td>$word</td>";
             $table .= "<td>$mean</td>";
             $table .= "<td>$zanwu</td>";
+            $table .= "<td>$code</td>";
             $table .= "<td>$level</td>";
             $table .= '</tr>';
         }
