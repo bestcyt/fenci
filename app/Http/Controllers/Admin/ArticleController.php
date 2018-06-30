@@ -38,7 +38,7 @@ class ArticleController extends Controller
         return view('admin.article.create',['levels'=>$levels]);
     }
 
-    //级别分词
+    //分词标注
     public function ppl(Request $request){
 
         $article_string = $request->input('article');
@@ -133,9 +133,8 @@ class ArticleController extends Controller
         }
         if ($request->method() == 'POST'){
             //获取缓存词汇库
-            $words = \Illuminate\Support\Facades\Cache::get('words');
+            $words = Cache::get('words');
             //分词，形成数组
-            //$article = Jieba::cut($request->input('article'),false);
             $article = [];
             $this->pscws->send_text($request->input('article'));
             while ($some = $this->pscws->get_result())
@@ -159,6 +158,7 @@ class ArticleController extends Controller
             $article_values = array_values($article); //初始去除符号后的分词结果重排键值
             $article_unique = array_values(array_unique($article));//初始去除符号后的分词结果重排键值+去重
 
+
             //循环统计值，修改数组结果，再遍历唯一编码
             $art_arr = [];
             for ($i=0;$i<count($article_unique);$i++){
@@ -179,7 +179,6 @@ class ArticleController extends Controller
 
             //统计文章词汇各个等级的个数
             $level1 = $level2 = $level3 = $level4 = $level5 = 0;
-            $t2 = 0;
             for ($i=0;$i<count($words);$i++){
                 for ($j=0;$j<count($article_values);$j++){
                     if ( strtolower($words[$i]['word']) == strtolower($article_values[$j])){  //判断词汇是否匹配
@@ -198,16 +197,31 @@ class ArticleController extends Controller
                         if ($words[$i]['level'] == 5){
                             $level5 ++;
                         }
-                        $t2++;
                     }
                 }
             }
 
+            $outputWords = [];
+            //输出的word，加一列 频数
+            for ($i=0;$i<count($words);$i++){
+                $outputWords[$i]['id'] = $words[$i]['id'];
+                $outputWords[$i]['mean'] = strpos($words[$i]['mean'],'=') === 0 ? "'".$words[$i]['mean']:$words[$i]['mean'];
+                $outputWords[$i]['code'] = $words[$i]['code'];
+                $outputWords[$i]['level'] = $words[$i]['level'];
+                $outputWords[$i]['times'] = 0;
+                for ($j=0;$j<count($art_arr);$j++){
+                    if ( strtolower($words[$i]['word']) == strtolower($art_arr[$j]['word'])){  //判断词汇是否匹配
+                        $outputWords[$i]['times'] = $art_arr[$j]['times'];
+                    }
+                }
+            }
+
+
             //统计每个等级次数
             $level = [[$level1,$level2,$level3,$level4,$level5]];
-            $sheet1_header = [['单词','频数']];
+            $sheet1_header = [['序号','释义','编码','级别','频数']];
             $sheet2_header = [['1级','2级','3级','4级','5级']];
-            $sheet1 = array_merge($sheet1_header,$art_arr);
+            $sheet1 = array_merge($sheet1_header,$outputWords);
             $sheet2 = array_merge($sheet2_header,$level);
 
             Excel::create('词频统计',function($excel) use ($sheet1,$sheet2){
