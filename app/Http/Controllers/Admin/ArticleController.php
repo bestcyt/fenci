@@ -339,24 +339,35 @@ class ArticleController extends Controller
         $words = Cache::get('words');
 
 
+
         //根据文章关键词的顺序，重新将关键词排序，为了序号从1开始，用了ksort
         $key_word = [];
+        $article_cut_lower = $article_cut;
+        for($j=0;$j<count($article_cut_lower);$j++){
+            $article_cut_lower[$j] = strtolower($article_cut_lower[$j]);
+        }
+
+        //小写先匹配，捕获按顺序得到的键key
         for ($j=0;$j<count($get_word);$j++){ //遍历分词数组
             //判断词汇是否匹配
-            if ($key = array_search($get_word[$j],$article_cut)){
-                $key_word[$key] = $article_cut[$key];
-            }
-        }
-        ksort($key_word);  //根据键 来排序
-        $key_word = array_values($key_word);
-        for ($j=0;$j<count($key_word);$j++){ //遍历分词数组
-            //判断词汇是否匹配
-            if ($key = array_search($key_word[$j],$article_cut)){
-                $num = $j+1; //记录序号
-                $article_cut[$key] = "<b>$article_cut[$key]<span style='color: #ff7c6e'>($num)</span></b>";//加粗并给标记上红色
+            if (($key = array_search($get_word[$j],$article_cut_lower)) !== false){ //有可能在第一个就0了
+                $key_word[$key] = $article_cut_lower[$key];
             }
         }
 
+
+        ksort($key_word);  //根据键 来排序
+//        dd($get_word,$key_word);
+
+        //匹配记录好序号
+        $num = 0;
+        foreach ($key_word as $key_wor=>$key_val){
+            $num  ++; //记录序号
+            $article_cut[$key_wor] = "<b>$article_cut[$key_wor]<span style='color: #ff7c6e'>($num)</span></b>";//加粗并给标记上红色
+        }
+
+        //将键重新排列
+        $key_word = array_values($key_word);
         //整理加粗后的数组，拼接为文章
         $article = '';
         for ($j=0;$j<count($article_cut);$j++){
