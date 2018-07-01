@@ -277,32 +277,40 @@ class ArticleController extends Controller
 
             //分成5个级别的数组
             $words = Cache::get('words');
-            $re1 = $re2 = $re3 = $re4 = $re5 = [];
+            $re1 = $re2 = $re3 = $re4 = $re5 = $reOther = [];
             for ($i=0;$i<count($words);$i++){
-                for ($j=0;$j<count($re_arr);$j++){
+            for ($j=0;$j<count($re_arr);$j++){
+                $flag = 0;
                     if (strtolower($words[$i]['word']) == $re_arr[$j]){
                         if ($words[$i]['level'] == 1){
                             $re1[] = $re_arr[$j];
+                            $flag =1;
                         }
                         if ($words[$i]['level'] == 2){
                             $re2[] = $re_arr[$j];
+                            $flag =1;
                         }
                         if ($words[$i]['level'] == 3){
                             $re3[] = $re_arr[$j];
+                            $flag =1;
                         }
                         if ($words[$i]['level'] == 4){
                             $re4[] = $re_arr[$j];
+                            $flag =1;
                         }
                         if ($words[$i]['level'] == 5){
                             $re5[] = $re_arr[$j];
+                            $flag =1;
                         }
                     }
+
                 }
+                //$reOther[] = $re_arr[$j];
             }
             //dd([$re1,$re2,$re3,$re4,$re5]);
 
             //使用response 可以防止多了双引号
-            return response()->json([$re1,$re2,$re3,$re4,$re5]);
+            return response()->json([$re1,$re2,$re3,$re4,$re5,$reOther]);
         }
     }
 

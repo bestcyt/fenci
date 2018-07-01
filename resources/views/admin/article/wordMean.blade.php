@@ -87,6 +87,8 @@
                                 </li>
                                 <li class=""><a data-toggle="tab" href="#tab-5">5级</a>
                                 </li>
+                                {{--<li class=""><a data-toggle="tab" href="#tab-6">其他</a>--}}
+                                {{--</li>--}}
                             </ul>
                             <div class="tab-content">
                                 <div id="tab-1" class="tab-pane active">
@@ -157,6 +159,21 @@
                                                 <tr>
                                                     <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall5">全选</button>
                                                         <button type="button" class="btn btn-sm btn-danger" id="uncheckall5">取消全选</button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-6" class="tab-pane">
+                                    <div class="full-height-scroll">
+                                        <div class="table-responsive">
+                                            <table id="t6"  class="table table-striped table-hover">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall6">全选</button>
+                                                        <button type="button" class="btn btn-sm btn-danger" id="uncheckall6">取消全选</button>
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -254,6 +271,15 @@
                                         });
                                         $("#t5 tbody").append(str4);
                                     }
+                                    if(i == 5){
+                                        var str5 = '';
+                                        $.each(v,function (i5,v5) {
+                                            str5 += "<tr>";
+                                            str5 += "<td>"+"<input type='checkbox' class='checkbox6'  name="+v5+" value="+v5+">"+v5+"<br>"+"</td>";
+                                            str5 += "</tr>";
+                                        });
+                                        $("#t6 tbody").append(str5);
+                                    }
 //                                    if ( (i)%5 == 0 && !(i%2 == 0)){
 //                                        str += "<tr>";
 //                                        str += "<td>"+"<input type='checkbox' name="+v+" value="+v+">"+v+"<br>"+"</td>";
@@ -308,6 +334,12 @@
                     });
                     $("#uncheckall5").click(function(){
                         $(".checkbox5").removeAttr("checked");
+                    });
+                    $("#checkall6").click(function(){
+                        $(".checkbox6").attr("checked","true");
+                    });
+                    $("#uncheckall6").click(function(){
+                        $(".checkbox6").removeAttr("checked");
                     })
 
                 });
