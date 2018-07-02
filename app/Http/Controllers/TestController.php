@@ -20,7 +20,7 @@ class TestController extends Controller
     //
     public function getUserAt()
     {
-        $user = ['admin','cyt','aaa'];
+        $user = ['id'=>'admin','url'=>'cyt','title'=>'aaa'];
 
         return response()->json($user);
     }

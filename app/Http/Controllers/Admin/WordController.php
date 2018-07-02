@@ -6,20 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class WordController extends Controller
 {
 
-   public function __construct(){
-      // ini_set('max_execution_time', '0');
-   }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //获取缓存的数据
@@ -29,39 +21,93 @@ class WordController extends Controller
             return back();
         }
 
-        return view('admin.word.index',['words'=>$words_cache]);
+        $levels = Cache::get('levels');
+
+        $ws = DB::table('words')->paginate(20);
+
+        //$collection = new Collection($moments);
+        //返回的分页数据
+        //$currentPageSearchResults = array_values($collection->slice(($page-1)*$perPage,$perPage)->all());
+
+        return view('admin.word.index',['words'=>$ws]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         return view('admin.word.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    //获取随机颜色
+    public  function randColor(){
+        $colors = array();
+        for($i = 0;$i<6;$i++){
+            $colors[] = dechex(rand(0,15));
+        }
+        return implode('',$colors);
+    }
+
     public function store(Request $request)
     {
-        //
         set_time_limit(0);
-
+        //按多个等级了，就要弄成不同sheet
         DB::table('words')->truncate();
 
         $file = $request->file('word_excel')->path();
         $re =  Excel::load($file, function($reader) {
             $reader->noHeading(); //这一句
         })->get();
+        //re = 几个sheet
 
-        //dd(count($re));
-        //重新录
+        //标准库创建指定长度数组，并初始化等级颜色
+        $level_caches = new \SplFixedArray(count($re));
+        for($i=0;$i<count($re);$i++){
+            $level_caches[$i] = $this->randColor();
+        }
+        //
+        Cache::forever('levels',$level_caches);
+
+        //多个sheet的插入
+        $this->manySheetStore($re);
+
+        flash('导入成功','success')->important();
+        return back();
+    }
+
+    //多个sheet
+    public function manySheetStore($re){
+
+        $time = date('Y-m-d H:m:i',time());
+        $insert_array = $ar = $all_words = [];
+        //每个sheet循环
+        for ($i=0;$i<count($re);$i++){
+            $tem = $re[$i]->toArray(); //集合转为数组
+            for ($j=0;$j<count($tem);$j++){
+                $insert_array[$j]['word'] = $tem[$j][0];
+                $insert_array[$j]['mean'] = $tem[$j][1];
+                $insert_array[$j]['level'] = intval($tem[$j][2]);
+                $insert_array[$j]['zanwu'] = $tem[$j][3];
+                $insert_array[$j]['code'] = intval($tem[$j][4]);
+                $insert_array[$j]['created_at'] = $time;
+            }
+            $all_words = array_merge($all_words,$insert_array);
+
+            DB::table('words')->insert($insert_array);
+
+        }
+        foreach ($all_words as $array_one=>&$value){
+            $value['id'] = $array_one+1;
+        }
+
+        //记录导入记录
+        $info = ['count'=>count($all_words),'time'=>$time];
+        Log::info('导入Excel词汇共：',$info);
+        //缓存全部词汇
+        Cache::forever('words',$all_words);
+    }
+
+    //一个sheet
+    public function oneSheetStore($re){
         $insert_array = $ar = [];
 
         //整理成数组格式
@@ -85,7 +131,6 @@ class WordController extends Controller
             $insert_array[$i]['created_at'] = $time;
         }
 
-        //插入数据库
         DB::table('words')->insert($insert_array);
 
         foreach ($insert_array as $array_one=>&$value){
@@ -95,8 +140,6 @@ class WordController extends Controller
         //缓存词汇
         Cache::forever('words',$insert_array);
 
-        flash('导入成功','success')->important();
-        return back();
     }
 
     /*
@@ -106,10 +149,12 @@ class WordController extends Controller
         $words = DB::table('words')->get()->map(function ($value) {
             return (array)$value;
         })->toArray();
-        Cache::flush();
+
+        Cache::forget('words');
         Cache::forever('words',$words);
+
         flash('刷新缓存成功','success')->important();
-        return redirect()->to('admin/word/index');
+        return redirect()->route('wordIndex');
     }
 
     /**

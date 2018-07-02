@@ -19,12 +19,6 @@ class ArticleController extends Controller
 
     public function __construct()
     {
-//        ini_set('memory_limit', '1500M');
-//        $this->jieba = new Jieba();
-//        $this->finalseg = new Finalseg();
-//
-//        $this->jieba->init();
-//        $this->finalseg->init();
 
         $this->pscws = new PSCWS4('utf8');
         $this->pscws->set_charset('utf-8');
@@ -42,12 +36,16 @@ class ArticleController extends Controller
     public function ppl(Request $request){
 
         $article_string = $request->input('article');
-        $jibie_string = $request->input('jibie');
+        $checkbox_string = $request->input('checkbox');
         $level_string = $request->input('level_str');
 
         //获得级别颜色，并添加缓存
         $levels_arr = array_filter(explode(',',$level_string));
-        Cache::forever('levels',$levels_arr);
+        $levels = Cache::get('levels');
+        for($i=0;$i<count($levels);$i++){
+            $levels[$i] = $levels_arr[$i];
+        }
+        Cache::forever('levels',$levels);
 
         //分词，形成数组
         $article_fenci = [];
@@ -60,28 +58,23 @@ class ArticleController extends Controller
             }
         }
         //获取缓存词汇库
-        $words = \Illuminate\Support\Facades\Cache::get('words');
+        $words = Cache::get('words');
 
-        $jibie = array_filter(explode(',',$jibie_string));
+        $checkbox_arr = array_filter(explode(',',$checkbox_string));
+        foreach ($checkbox_arr as $b=>&$v){  //将键-》等级值
+            $v = $b+1;
+        }
+        $checkbox_arr = array_values($checkbox_arr);
 
         for ($i=0;$i<count($words);$i++){//遍历全部缓存词汇
-            for ($j=0;$j<count($article_fenci);$j++){ //遍历结巴分词数组
-                if ((stripos($words[$i]['word'],$article_fenci[$j]) !== false) && (strlen($words[$i]['word']) == strlen($article_fenci[$j]))){  //判断词汇是否匹配
-                    if (in_array($words[$i]['level'],$jibie)){ //判断需要显示的颜色是否在数组中
-                        if ($words[$i]['level'] == 1){
-                            $article_fenci[$j] = "<span style='color: $levels_arr[0]'>$article_fenci[$j]</span>";
-                        }
-                        if ($words[$i]['level'] == 2){
-                            $article_fenci[$j] = "<span style='color: $levels_arr[1]'>$article_fenci[$j]</span>";
-                        }
-                        if ($words[$i]['level'] == 3){
-                            $article_fenci[$j] = "<span style='color: $levels_arr[2]'>$article_fenci[$j]</span>";
-                        }
-                        if ($words[$i]['level'] == 4){
-                            $article_fenci[$j] = "<span style='color: $levels_arr[3]'>$article_fenci[$j]</span>";
-                        }
-                        if ($words[$i]['level'] == 5){
-                            $article_fenci[$j] = "<span style='color: $levels_arr[4]'>$article_fenci[$j]</span>";
+            for ($j=0;$j<count($article_fenci);$j++){ //遍历分词数组
+//                if ((stripos($words[$i]['word'],$article_fenci[$j]) !== false) && (strlen($words[$i]['word']) == strlen($article_fenci[$j]))){  //判断词汇是否匹配
+                if (strtolower($words[$i]['word']) == strtolower($article_fenci[$j])){  //判断词汇是否匹配
+                    if (in_array($words[$i]['level'],$checkbox_arr)){ //判断需要显示的颜色是否在数组中
+                        for($z=0;$z<count($levels);$z++){ //循环级别，替换成有颜色的
+                            if ($words[$i]['level'] == ($z+1)){
+                                $article_fenci[$j] = "<span style='color: $levels[$z]'>$article_fenci[$j]</span>";
+                            }
                         }
                     }
                 }
@@ -92,7 +85,6 @@ class ArticleController extends Controller
             if (preg_match("/[\x7f-\xff]/",$article_fenci[$j])){
                 $article .= $article_fenci[$j];
             }else{
-
                 if ($article_fenci[$j] == 'br'){
                     $article_fenci[$j] = '<br>';
                 }

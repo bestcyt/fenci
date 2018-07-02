@@ -30,7 +30,7 @@ Route::group(['prefix'=>'admin','namespace'=>'Admin','middleware'=>'auth'] , fun
     //获取缓存词汇库
     $route->get('word/cache','WordController@getCache');
 
-    $route->get('word/index','WordController@index'); // 词汇列表
+    $route->get('word/index','WordController@index')->name('wordIndex'); // 词汇列表
     $route->get('word/create','WordController@create'); //重传词汇
     $route->get('word/truncate','WordController@truncate'); //清空词汇
     $route->get('word/updateWordCache','WordController@updateWordCache'); //清空词汇

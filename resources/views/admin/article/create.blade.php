@@ -50,49 +50,18 @@
                             <label class="col-sm-1 control-label">显示级别</label>
 
                             <div class="col-sm-11" >
-                                <div class="checkbox-inline">
-                                    <input type="text" name="level1" id="level1" class="form-control colorpicker" value="{{ $levels[0] }}" />
-                                </div>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" id="check1" value="1" style="position: absolute; opacity: 0;">
-                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                @for($i=0;$i<count($levels);$i++)
+                                    <div class="checkbox-inline">
+                                        <input type="text" name="level1" id="level{{ $i+1 }}" class="form-control colorpicker level_color" value="{{ $levels[$i] }}" />
                                     </div>
-                                    1级
-                                </label>
-
-                                <div class="checkbox-inline">
-                                    <input type="text" name="level2" id="level2" class="form-control colorpicker" value="{{ $levels[1] }}" />
-                                </div>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" id="check2"  value="2" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                    2级</label>
-                                <br>
-                                <div class="checkbox-inline">
-                                    <input type="text" name="level3" id="level3" class="form-control colorpicker" value="{{ $levels[2] }}" />
-                                </div>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" id="check3"  value="3" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                    3级</label>
-
-                                <div class="checkbox-inline">
-                                    <input type="text" name="level4" id="level4" class="form-control colorpicker" value="{{ $levels[3] }}" />
-                                </div>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" id="check4" value="4" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                    4级</label>
-                                <br>
-                                <div class="checkbox-inline">
-                                    <input type="text" name="level5" id="level5" class="form-control colorpicker" value="{{ $levels[4] }}" />
-                                </div>
-                                <label class="checkbox-inline i-checks">
-                                    <div class="icheckbox_square-green" style="position: relative;">
-                                        <input checked type="checkbox" id="check5" value="5" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                                    5级</label>
-
+                                    <label class="checkbox-inline i-checks">
+                                        <div class="icheckbox_square-green" style="position: relative;">
+                                            <input checked type="checkbox" class="level_check" id="check{{ $i }}" value="1" style="position: absolute; opacity: 0;">
+                                            <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                        </div>
+                                        {{ $i+1 }}级
+                                    </label>
+                                @endfor
                             </div>
                         </div>
 
@@ -179,35 +148,22 @@
 
                     //点击分词识别，触发ajax
                     document.getElementById("shi").onclick = function() {
-                        var jibie = '';
-                        if ($('#check1').prop('checked')) {
-                            jibie += '1,';
-                        }
-                        if ($('#check2').prop('checked')) {
-                            jibie += '2,';
-                        }
-                        if ($('#check3').prop('checked')) {
-                            jibie += '3,';
-                        }
-                        if ($('#check4').prop('checked')) {
-                            jibie += '4,';
-                        }
-                        if ($('#check5').prop('checked')) {
-                            jibie += '5,';
-                        }
-                        console.log(jibie);
+                        var checkbox = '';
+                        $('.level_check').each(function () {
+                            if ($(this).prop('checked')) {
+                                checkbox += $(this).val()+',';
+                            }else {
+                                checkbox += '0'+',';
+                            }
+
+                        });
 
                         var level_str = '';
-                        var le1 = $('#level1').val();
-                        level_str += le1+',';
-                        var le2 = $('#level2').val();
-                        level_str += le2+',';
-                        var le3 = $('#level3').val();
-                        level_str += le3+',';
-                        var le4 = $('#level4').val();
-                        level_str += le4+',';
-                        var le5 = $('#level5').val();
-                        level_str += le5+',';
+                        $('.level_color').each(function () {
+                            level_str += $(this).val()+',';
+                        });
+
+
                         //alert(level_str);
                         var strContent = document.getElementById("text").value;
                         strContent = strContent.replace(/\r\n/g, ' br '); //IE9、FF、chrome
@@ -218,7 +174,7 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             url:"ppl",
-                            data:{'article':strContent,'jibie':jibie,'level_str':level_str},
+                            data:{'article':strContent,'checkbox':checkbox,'level_str':level_str},
                             type:'post',
                             success:function(data){
                                 console.log(1);

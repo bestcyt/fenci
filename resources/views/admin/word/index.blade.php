@@ -2,7 +2,7 @@
 @section('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {{--<link href="{{ asset('js/plugins/footable-bootstrap/css/footable.bootstrap.css') }}" rel="stylesheet">--}}
-    <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+    {{--<link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">--}}
 
 @endsection
 @section('content')
@@ -55,113 +55,50 @@
                         @include('flash::message')
 {{--                        <form action="{{ url('admin/w/order') }}" method="post" id="order_form">--}}
                             {{--{{ csrf_field() }}--}}
-                            {{--<table class="footable table table-striped table-bordered table-hover" data-paging-position="right" data-filter=#filter data-paging="true" data-paging-size="20" >--}}
-                                {{--<thead>--}}
-                                {{--<tr>--}}
-                                    {{--<th>#</th>--}}
-                                    {{--<th>等级</th>--}}
-                                    {{--<th>词汇</th>--}}
-                                    {{--<th>释义</th>--}}
-                                    {{--<th>唯一编码</th>--}}
-                                    {{--<th>更新时间</th>--}}
-                                    {{--<th>操作</th>--}}
-                                {{--</tr>--}}
-                                {{--</thead>--}}
-                                {{--<tbody>--}}
-                                {{--@foreach($words as $item=>$val)--}}
-                                    {{--<tr id="{{ $item }}">--}}
+                            <table class="footable table table-striped table-bordered table-hover" data-paging-position="right" data-filter=#filter data-paging="true" data-paging-size="20" >
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>等级</th>
+                                    <th>词汇</th>
+                                    <th>释义</th>
+                                    <th>唯一编码</th>
+                                    <th>更新时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($words as $item=>$val)
+                                    <tr id="{{ $item }}">
                                         {{--<td>{{ $val['id']+1 }}</td>--}}
                                         {{--<td>{{ $val['level'] }}</td>--}}
                                         {{--<td>{{ $val['word'] }}</td>--}}
                                         {{--<td>{{ $val['mean'] }}</td>--}}
                                         {{--<td>{{ $val['code'] }}</td>--}}
                                         {{--<td>{{ $val['created_at'] }}</td>--}}
-                                        {{--<td>--}}
+                                        <td>{{ $val->id }}</td>
+                                        <td>{{ $val->level }}</td>
+                                        <td>{{ $val->word }}</td>
+                                        <td>{{ $val->mean }}</td>
+                                        <td>{{ $val->code }}</td>
+                                        <td>{{ $val->created_at }}</td>
+                                        <td>
                                             {{--<a href="{{ url('admin/city/'.$item->id.'/edit') }}" class="btn btn-xs btn-warning tooltips"  data-original-title="编辑" data-placement="top"><i class="fa fa-eye"></i></a>--}}
                                             {{--<a href="javascript:;" onclick="return false" class="btn btn-xs btn-outline btn-danger tooltips destroy_item" data-original-title="删除" data-placement="top">--}}
                                                 {{--<i class="fa fa-trash"></i>--}}
                                                 {{--<input type="hidden" value="{{ $item->id }}" class="city_id">--}}
                                             {{--</a>--}}
-                                        {{--</td>--}}
-                                    {{--</tr>--}}
-                                {{--@endforeach--}}
-                                {{--</tbody>--}}
-                            {{--</table>--}}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
                             {{--<button type="button" class="btn btn-primary" id="order_update">更新排序</button>--}}
                         {{--</form>--}}
-                        {{--<ul class="pagination pull-right">--}}
-                        {{--{{ $city ->appends([--}}
-                        {{--'city_name' => $request->city_name,--}}
-                        {{--])->links() }}--}}
-                        {{--</ul>--}}
-                        <table id="example" class="table table-striped table-bordered">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>序号</th>
-                                <th>标题</th>
-                                <th>连接</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                            <tfoot>
-                            <tr>
-                                <th></th>
-                                <th>序号</th>
-                                <th>标题</th>
-                                <th>连接</th>
-                            </tr>
-                            </tfoot>
-                            <!-- tbody是必须的 -->
-                        </table>
-                        <script>
-                            $(document).ready(function(){
-                                var t = $('#example').DataTable({
-                                    ajax: {
-                                        //指定数据源
-                                        url: "http://www.gbtags.com/gb/networks/uploads/a7bdea3c-feaf-4bb5-a3bd-f6184c19ec09/data.txt"
-                                    },
-                                    //每页显示三条数据
-                                    pageLength: 3,
-                                    columns: [{
-                                        "data": null //此列不绑定数据源，用来显示序号
-                                    },
-                                        {
-                                            "data": "id"
-                                        },
-                                        {
-                                            "data": "title"
-                                        },
-                                        {
-                                            "data": "url"
-                                        }],
-                                    "columnDefs": [{
-                                        // "visible": false,
-                                        //"targets": 0
-                                    },
-                                        {
-                                            "render": function(data, type, row, meta) {
-                                                //渲染 把数据源中的标题和url组成超链接
-                                                return '<a href="' + data + '" target="_blank">' + row.title + '</a>';
-                                            },
-                                            //指定是第三列
-                                            "targets": 2
-                                        }]
+                        <ul class="pagination pull-right">
+                        {{ $words ->links() }}
+                        </ul>
 
-                                });
-//前台添加序号
-                                t.on('order.dt search.dt',
-                                    function() {
-                                        t.column(0, {
-                                            "search": 'applied',
-                                            "order": 'applied'
-                                        }).nodes().each(function(cell, i) {
-                                            cell.innerHTML = i + 1;
-                                        });
-                                    }).draw();
-
-                            });
-                        </script>
                     </div>
                 </div>
             </div>
