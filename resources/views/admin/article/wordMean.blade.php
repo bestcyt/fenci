@@ -87,8 +87,10 @@
                                 </li>
                                 <li class=""><a data-toggle="tab" href="#tab-5">5级</a>
                                 </li>
-                                {{--<li class=""><a data-toggle="tab" href="#tab-6">其他</a>--}}
-                                {{--</li>--}}
+                                <li class=""><a data-toggle="tab" href="#tab-6">6级</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-7">7级</a>
+                                </li>
                             </ul>
                             <div class="tab-content">
                                 <div id="tab-1" class="tab-pane active">
@@ -174,6 +176,21 @@
                                                 <tr>
                                                     <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall6">全选</button>
                                                         <button type="button" class="btn btn-sm btn-danger" id="uncheckall6">取消全选</button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-7" class="tab-pane">
+                                    <div class="full-height-scroll">
+                                        <div class="table-responsive">
+                                            <table id="t6"  class="table table-striped table-hover">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall7">全选</button>
+                                                        <button type="button" class="btn btn-sm btn-danger" id="uncheckall7">取消全选</button>
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -280,6 +297,16 @@
                                         });
                                         $("#t6 tbody").append(str5);
                                     }
+                                    if(i == 6){
+                                        var str6 = '';
+                                        $.each(v,function (i6,v6) {
+                                            str6 += "<tr>";
+                                            str6 += "<td>"+"<input type='checkbox' class='checkbox7'  name="+v6+" value="+v6+">"+v6+"<br>"+"</td>";
+                                            str6 += "</tr>";
+                                        });
+                                        $("#t7 tbody").append(str6);
+                                    }
+
 //                                    if ( (i)%5 == 0 && !(i%2 == 0)){
 //                                        str += "<tr>";
 //                                        str += "<td>"+"<input type='checkbox' name="+v+" value="+v+">"+v+"<br>"+"</td>";

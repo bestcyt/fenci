@@ -66,9 +66,9 @@ class ArticleController extends Controller
         }
         $checkbox_arr = array_values($checkbox_arr);
 
+        //渲染文章
         for ($i=0;$i<count($words);$i++){//遍历全部缓存词汇
             for ($j=0;$j<count($article_fenci);$j++){ //遍历分词数组
-//                if ((stripos($words[$i]['word'],$article_fenci[$j]) !== false) && (strlen($words[$i]['word']) == strlen($article_fenci[$j]))){  //判断词汇是否匹配
                 if (strtolower($words[$i]['word']) == strtolower($article_fenci[$j])){  //判断词汇是否匹配
                     if (in_array($words[$i]['level'],$checkbox_arr)){ //判断需要显示的颜色是否在数组中
                         for($z=0;$z<count($levels);$z++){ //循环级别，替换成有颜色的
@@ -267,13 +267,20 @@ class ArticleController extends Controller
             //去重 重排后的数组
             $re_arr = array_values(array_unique($article_fenci2));
 
+            $levels = Cache::get('levels');
             //分成5个级别的数组
             $words = Cache::get('words');
-            $re1 = $re2 = $re3 = $re4 = $re5 = $reOther = [];
+            $re1 = $re2 = $re3 = $re4 = $re5 = $re6 = $re7 = [];
             for ($i=0;$i<count($words);$i++){
-            for ($j=0;$j<count($re_arr);$j++){
+                 for ($j=0;$j<count($re_arr);$j++){
                 $flag = 0;
                     if (strtolower($words[$i]['word']) == $re_arr[$j]){
+//                        for($z=0;$z<count($levels);$z++){ //循环级别，替换成有颜色的
+//                            if ($words[$i]['level'] == ($z+1)){
+//                                //$re.($z+1).[] = $re_arr[$j];
+//                                $flag =1;
+//                            }
+//                        }
                         if ($words[$i]['level'] == 1){
                             $re1[] = $re_arr[$j];
                             $flag =1;
@@ -294,6 +301,14 @@ class ArticleController extends Controller
                             $re5[] = $re_arr[$j];
                             $flag =1;
                         }
+                        if ($words[$i]['level'] == 6){
+                            $re6[] = $re_arr[$j];
+                            $flag =1;
+                        }
+                        if ($words[$i]['level'] == 7){
+                            $re7[] = $re_arr[$j];
+                            $flag =1;
+                        }
                     }
 
                 }
@@ -302,7 +317,7 @@ class ArticleController extends Controller
             //dd([$re1,$re2,$re3,$re4,$re5]);
 
             //使用response 可以防止多了双引号
-            return response()->json([$re1,$re2,$re3,$re4,$re5,$reOther]);
+            return response()->json([$re1,$re2,$re3,$re4,$re5,$re6,$re7]);
         }
     }
 
