@@ -77,127 +77,32 @@
                         <div class="clients-list">
                             <ul class="nav nav-tabs">
                                 <span class="pull-right small text-muted">结果</span>
-                                <li class="active"><a data-toggle="tab" href="#tab-1">1级</a>
-                                </li>
-                                <li class=""><a data-toggle="tab" href="#tab-2">2级</a>
-                                </li>
-                                <li class=""><a data-toggle="tab" href="#tab-3">3级</a>
-                                </li>
-                                <li class=""><a data-toggle="tab" href="#tab-4">4级</a>
-                                </li>
-                                <li class=""><a data-toggle="tab" href="#tab-5">5级</a>
-                                </li>
-                                <li class=""><a data-toggle="tab" href="#tab-6">6级</a>
-                                </li>
-                                <li class=""><a data-toggle="tab" href="#tab-7">7级</a>
-                                </li>
+                                @for($i=0;$i<count($levels);$i++)
+                                    <li class="{{ ($i+1) == 1 ? 'active':'' }}"><a data-toggle="tab" href="#tab-{{ ($i+1) }}">{{ ($i+1) }}级</a>
+                                    </li>
+                                @endfor
                             </ul>
                             <div class="tab-content">
-                                <div id="tab-1" class="tab-pane active">
-                                    <div class="full-height-scroll">
-                                        <div class="table-responsive">
-                                            <table id="t1" class="table table-striped table-hover">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall1">全选</button>
-                                                        <button type="button" class="btn btn-sm btn-danger" id="uncheckall1">取消全选</button>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
+                                @for($i=0;$i<count($levels);$i++)
+                                    <div id="tab-{{ ($i+1) }}" class="tab-pane {{ ($i+1) == 1 ? 'active':'' }}">
+                                        <div class="full-height-scroll">
+                                            <div class="table-responsive">
+                                                <table id="t{{ ($i+1) }}" class="table table-striped table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <button type="button" class="btn btn-success btn-sm chooseAll" id="checkall{{ ($i+1) }}">全选</button>
+                                                            <button type="button" class="btn btn-sm btn-danger unChooseAll" id="uncheckall{{ ($i+1) }}">取消全选</button>
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div id="tab-2" class="tab-pane">
-                                    <div class="full-height-scroll">
-                                        <div class="table-responsive">
-                                            <table id="t2" class="table table-striped table-hover">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall2">全选</button>
-                                                        <button type="button" class="btn btn-sm btn-danger" id="uncheckall2">取消全选</button>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="tab-3" class="tab-pane">
-                                    <div class="full-height-scroll">
-                                        <div class="table-responsive">
-                                            <table id="t3"  class="table table-striped table-hover">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall3">全选</button>
-                                                        <button type="button" class="btn btn-sm btn-danger" id="uncheckall3">取消全选</button>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="tab-4" class="tab-pane">
-                                    <div class="full-height-scroll">
-                                        <div class="table-responsive">
-                                            <table id="t4"  class="table table-striped table-hover">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall4">全选</button>
-                                                        <button type="button" class="btn btn-sm btn-danger" id="uncheckall4">取消全选</button>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="tab-5" class="tab-pane">
-                                    <div class="full-height-scroll">
-                                        <div class="table-responsive">
-                                            <table id="t5"  class="table table-striped table-hover">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall5">全选</button>
-                                                        <button type="button" class="btn btn-sm btn-danger" id="uncheckall5">取消全选</button>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="tab-6" class="tab-pane">
-                                    <div class="full-height-scroll">
-                                        <div class="table-responsive">
-                                            <table id="t6"  class="table table-striped table-hover">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall6">全选</button>
-                                                        <button type="button" class="btn btn-sm btn-danger" id="uncheckall6">取消全选</button>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="tab-7" class="tab-pane">
-                                    <div class="full-height-scroll">
-                                        <div class="table-responsive">
-                                            <table id="t6"  class="table table-striped table-hover">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="client-avatar"><button type="button" class="btn btn-success btn-sm" id="checkall7">全选</button>
-                                                        <button type="button" class="btn btn-sm btn-danger" id="uncheckall7">取消全选</button>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endfor
                                 </div>
                             </div>
                         <div class="hr-line-dashed"></div>
@@ -240,88 +145,30 @@
                             success:function(data){
                                 var stra = "<table class='table table-bordered'>";
                                 //根据返回的去重后的数组，拼接table
-                                $.each(data,function (i,v) {
-                                    console.log(i);
-                                    console.log(v);
-                                    if(i == 0){
-                                        var str = '';
-                                        $.each(v,function (i0,v0) {
+                                $.each(data,function (item,val) {
+                                    var str = '';
+                                    var tb = "#t"+(item+1); //指定table 的id
+
+                                    if(val.length > 0){
+                                        $.each(val,function (i,v) {
                                             str += "<tr>";
-                                            str += "<td>"+"<input type='checkbox' class='checkbox1' name="+v0+" value="+v0+">"+v0+"<br>"+"</td>";
+                                            var checkbox = 'checkbox'+(i+1);
+                                            str += "<td>"+"<input type='checkbox' class="+checkbox+" name="+v+" value="+v+">"+v+"<br>"+"</td>";
                                             str += "</tr>";
                                         });
-                                        $("#t1 tbody").append(str);
+                                        var aaa = " "+tb+" tbody"; //选择器
+                                        console.log(aaa);
                                     }
-                                    if(i == 1){
-                                        var str1 = '';
-                                        $.each(v,function (i1,v1) {
-                                            str1 += "<tr>";
-                                            str1 += "<td>"+"<input type='checkbox' class='checkbox2'  name="+v1+" value="+v1+">"+v1+"<br>"+"</td>";
-                                            str1 += "</tr>";
-                                        });
-                                        $("#t2 tbody").append(str1);
-                                    }
-                                    if(i == 2){
-                                        var str2 = '';
-                                        $.each(v,function (i2,v2) {
-                                            str2 += "<tr>";
-                                            str2 += "<td>"+"<input type='checkbox' class='checkbox3'  name="+v2+" value="+v2+">"+v2+"<br>"+"</td>";
-                                            str2 += "</tr>";
-                                        });
-                                        $("#t3 tbody").append(str2);
-                                    }
-                                    if(i == 3){
-                                        var str3 = '';
-                                        $.each(v,function (i3,v3) {
-                                            str3 += "<tr>";
-                                            str3 += "<td>"+"<input type='checkbox' class='checkbox4'  name="+v3+" value="+v3+">"+v3+"<br>"+"</td>";
-                                            str3 += "</tr>";
-                                        });
-                                        $("#t4 tbody").append(str3);
-                                    }
-                                    if(i == 4){
-                                        var str4 = '';
-                                        $.each(v,function (i4,v4) {
-                                            str4 += "<tr>";
-                                            str4 += "<td>"+"<input type='checkbox' class='checkbox5'  name="+v4+" value="+v4+">"+v4+"<br>"+"</td>";
-                                            str4 += "</tr>";
-                                        });
-                                        $("#t5 tbody").append(str4);
-                                    }
-                                    if(i == 5){
-                                        var str5 = '';
-                                        $.each(v,function (i5,v5) {
-                                            str5 += "<tr>";
-                                            str5 += "<td>"+"<input type='checkbox' class='checkbox6'  name="+v5+" value="+v5+">"+v5+"<br>"+"</td>";
-                                            str5 += "</tr>";
-                                        });
-                                        $("#t6 tbody").append(str5);
-                                    }
-                                    if(i == 6){
-                                        var str6 = '';
-                                        $.each(v,function (i6,v6) {
-                                            str6 += "<tr>";
-                                            str6 += "<td>"+"<input type='checkbox' class='checkbox7'  name="+v6+" value="+v6+">"+v6+"<br>"+"</td>";
-                                            str6 += "</tr>";
-                                        });
-                                        $("#t7 tbody").append(str6);
-                                    }
-
-//                                    if ( (i)%5 == 0 && !(i%2 == 0)){
-//                                        str += "<tr>";
-//                                        str += "<td>"+"<input type='checkbox' name="+v+" value="+v+">"+v+"<br>"+"</td>";
-//                                    }else if ( (i+1)%5 == 0 && ((i+1)%2 == 0)){
-//                                        str += "<td>"+"<input type='checkbox' name="+v+" value="+v+">"+v+"<br>"+"</td>";
-//                                        str += "</tr>";
-//                                    }else {
-//                                        str += "<td>"+"<input type='checkbox' name="+v+" value="+v+">"+v+"<br>"+"</td>";
-//                                    }
-                                });
+                                    $(aaa).html('');
+                                    $(aaa).append(str);
+                                 });
 //                                str += "</table>";
 //                                $('#show').html(str); //将选择的CheckBox放进show
                             }
                         },JSON);
                     };
+
+                    //导出word触发事件
                     document.getElementById("dao").onclick = function() {
                         var strContent = document.getElementById("text").value;
                         strContent = strContent.replace(/\r\n/g, ' br '); //IE9、FF、chrome
@@ -331,43 +178,74 @@
                         $('#dao_form').submit();
                     };
 
-                    //点击全选
-                    $("#checkall1").click(function(){
-                        $(".checkbox1").attr("checked","true");
+                    var level = 0;
+                    $.get("getLevel", function(result){
+                        level = result;
                     });
-                    $("#uncheckall1").click(function(){
-                        $(".checkbox1").removeAttr("checked");
+                    for (var i=0;i<level;i++){
+                        var chooseall = "#checkall"+(i+1);
+                        var unchooseall = "#uncheckall"+(i+1);
+
+//                        var checkbox = ".checkbox"+(i+1);
+//                        $(chooseall).click(function(){
+//                            $(checkbox).attr("checked","true");
+//                        });
+//                        $(unchooseall).click(function(){
+//                            $(checkbox).removeAttr("checked");
+//                        });
+                    }
+                    $(".chooseAll").click(function(){
+//                        $(this).attr("checked","true");
+                        alert('adsf');
                     });
-                    $("#checkall2").click(function(){
-                        $(".checkbox2").attr("checked","true");
+                    $(".unChooseAll").click(function(){
+                        $(this).removeAttr("checked");
                     });
-                    $("#uncheckall2").click(function(){
-                        $(".checkbox2").removeAttr("checked");
-                    });
-                    $("#checkall3").click(function(){
-                        $(".checkbox3").attr("checked","true");
-                    });
-                    $("#uncheckall3").click(function(){
-                        $(".checkbox3").removeAttr("checked");
-                    });
-                    $("#checkall4").click(function(){
-                        $(".checkbox4").attr("checked","true");
-                    });
-                    $("#uncheckall4").click(function(){
-                        $(".checkbox4").removeAttr("checked");
-                    });
-                    $("#checkall5").click(function(){
-                        $(".checkbox5").attr("checked","true");
-                    });
-                    $("#uncheckall5").click(function(){
-                        $(".checkbox5").removeAttr("checked");
-                    });
-                    $("#checkall6").click(function(){
-                        $(".checkbox6").attr("checked","true");
-                    });
-                    $("#uncheckall6").click(function(){
-                        $(".checkbox6").removeAttr("checked");
-                    })
+                    {{--var dd = {{ $levels }};--}}
+                    {{--//点击全选--}}
+
+//                    $("#checkall1").click(function(){
+//                        $(".checkbox1").attr("checked","true");
+//                    });
+//                    $("#uncheckall1").click(function(){
+//                        $(".checkbox1").removeAttr("checked");
+//                    });
+//                    $("#checkall2").click(function(){
+//                        $(".checkbox2").attr("checked","true");
+//                    });
+//                    $("#uncheckall2").click(function(){
+//                        $(".checkbox2").removeAttr("checked");
+//                    });
+//                    $("#checkall3").click(function(){
+//                        $(".checkbox3").attr("checked","true");
+//                    });
+//                    $("#uncheckall3").click(function(){
+//                        $(".checkbox3").removeAttr("checked");
+//                    });
+//                    $("#checkall4").click(function(){
+//                        $(".checkbox4").attr("checked","true");
+//                    });
+//                    $("#uncheckall4").click(function(){
+//                        $(".checkbox4").removeAttr("checked");
+//                    });
+//                    $("#checkall5").click(function(){
+//                        $(".checkbox5").attr("checked","true");
+//                    });
+//                    $("#uncheckall5").click(function(){
+//                        $(".checkbox5").removeAttr("checked");
+//                    });
+//                    $("#checkall6").click(function(){
+//                        $(".checkbox6").attr("checked","true");
+//                    });
+//                    $("#uncheckall6").click(function(){
+//                        $(".checkbox6").removeAttr("checked");
+//                    })
+//                    $("#checkall7").click(function(){
+//                        $(".checkbox7").attr("checked","true");
+//                    });
+//                    $("#uncheckall7").click(function(){
+//                        $(".checkbox7").removeAttr("checked");
+//                    })
 
                 });
     </script>

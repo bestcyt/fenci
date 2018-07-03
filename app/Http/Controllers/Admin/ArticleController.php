@@ -232,7 +232,8 @@ class ArticleController extends Controller
     {
         if ($request->method() == 'GET'){
 
-            return view('admin.article.wordMean');
+            $levels = Cache::get('levels');
+            return view('admin.article.wordMean',['levels'=>$levels]);
         }
         if ($request->method() == 'POST' && $request->input('type') == 'ppl'){
             //ajax提交，返回分词结果
@@ -268,6 +269,10 @@ class ArticleController extends Controller
             $re_arr = array_values(array_unique($article_fenci2));
 
             $levels = Cache::get('levels');
+            $re_all = [];
+            for ($i=0;$i<count($levels);$i++){
+                $re_all[$i] = [];
+            }
             //分成5个级别的数组
             $words = Cache::get('words');
             $re1 = $re2 = $re3 = $re4 = $re5 = $re6 = $re7 = [];
@@ -275,49 +280,48 @@ class ArticleController extends Controller
                  for ($j=0;$j<count($re_arr);$j++){
                 $flag = 0;
                     if (strtolower($words[$i]['word']) == $re_arr[$j]){
-//                        for($z=0;$z<count($levels);$z++){ //循环级别，替换成有颜色的
-//                            if ($words[$i]['level'] == ($z+1)){
-//                                //$re.($z+1).[] = $re_arr[$j];
-//                                $flag =1;
-//                            }
+                        for($z=0;$z<count($levels);$z++){ //
+                            if ($words[$i]['level'] == ($z+1)){
+                                $re_all[$z][] = $re_arr[$j];
+                                $flag =1;
+                            }
+                        }
+//                        if ($words[$i]['level'] == 1){
+//                            $re1[] = $re_arr[$j];
+//                            $flag =1;
 //                        }
-                        if ($words[$i]['level'] == 1){
-                            $re1[] = $re_arr[$j];
-                            $flag =1;
-                        }
-                        if ($words[$i]['level'] == 2){
-                            $re2[] = $re_arr[$j];
-                            $flag =1;
-                        }
-                        if ($words[$i]['level'] == 3){
-                            $re3[] = $re_arr[$j];
-                            $flag =1;
-                        }
-                        if ($words[$i]['level'] == 4){
-                            $re4[] = $re_arr[$j];
-                            $flag =1;
-                        }
-                        if ($words[$i]['level'] == 5){
-                            $re5[] = $re_arr[$j];
-                            $flag =1;
-                        }
-                        if ($words[$i]['level'] == 6){
-                            $re6[] = $re_arr[$j];
-                            $flag =1;
-                        }
-                        if ($words[$i]['level'] == 7){
-                            $re7[] = $re_arr[$j];
-                            $flag =1;
-                        }
+//                        if ($words[$i]['level'] == 2){
+//                            $re2[] = $re_arr[$j];
+//                            $flag =1;
+//                        }
+//                        if ($words[$i]['level'] == 3){
+//                            $re3[] = $re_arr[$j];
+//                            $flag =1;
+//                        }
+//                        if ($words[$i]['level'] == 4){
+//                            $re4[] = $re_arr[$j];
+//                            $flag =1;
+//                        }
+//                        if ($words[$i]['level'] == 5){
+//                            $re5[] = $re_arr[$j];
+//                            $flag =1;
+//                        }
+//                        if ($words[$i]['level'] == 6){
+//                            $re6[] = $re_arr[$j];
+//                            $flag =1;
+//                        }
+//                        if ($words[$i]['level'] == 7){
+//                            $re7[] = $re_arr[$j];
+//                            $flag =1;
+//                        }
                     }
 
                 }
                 //$reOther[] = $re_arr[$j];
             }
-            //dd([$re1,$re2,$re3,$re4,$re5]);
 
             //使用response 可以防止多了双引号
-            return response()->json([$re1,$re2,$re3,$re4,$re5,$re6,$re7]);
+            return response()->json($re_all);
         }
     }
 
@@ -447,5 +451,11 @@ class ArticleController extends Controller
         //再接上表格
 
         echo $html ;
+    }
+
+    //获取级别
+    public function getLevel(){
+        $levels = Cache::get('levels');
+        echo count($levels);
     }
 }
