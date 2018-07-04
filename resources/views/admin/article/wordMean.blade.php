@@ -82,7 +82,7 @@
                                     </li>
                                 @endfor
                             </ul>
-                            <div class="tab-content">
+                            <div class="tab-content" id="lists">
                                 @for($i=0;$i<count($levels);$i++)
                                     <div id="tab-{{ ($i+1) }}" class="tab-pane {{ ($i+1) == 1 ? 'active':'' }}">
                                         <div class="full-height-scroll">
@@ -176,81 +176,29 @@
                     };
 
                     var level = 0;
+                    //获取所有等级，目前看来没什么用
                     $.get("getLevel", function(result){
                         level = result;
-//                        for (var i=0;i<result;i++){
-//                            var chooseall = "#checkall"+(i+1);
-//                            var unchooseall = "#uncheckall"+(i+1);
-//
-//                            var checkbox = ".checkbox"+(i+1);
-//                            $(chooseall).click(function(i){
-//                                $(this).attr("checked","true");
-//                                console.log(i);
-//                                alert(i);
-//                            });
-//                            $(unchooseall).click(function(i){
-//                                alert(i);
-//                                $(this).removeAttr("checked");
-////                            $(checkbox).removeAttr("checked");
-//                            });
-//                        }
+
                         console.log('result:'+result);
                     });
-                    console.log('level:'+level);
-
-                    $("#checkall1").click(function(){
-                        $(".checkbox1").attr("checked","true");
-                    });
-                    $("#uncheckall1").click(function(){
-                        $(".checkbox1").removeAttr("checked");
-                    });
-                    $("#checkall2").click(function(){
-                        $(".checkbox2").attr("checked","true");
-                    });
-                    $("#uncheckall2").click(function(){
-                        $(".checkbox2").removeAttr("checked");
-                    });
-                    $("#checkall3").click(function(){
-                        $(".checkbox3").attr("checked","true");
-                    });
-                    $("#uncheckall3").click(function(){
-                        $(".checkbox3").removeAttr("checked");
-                    });
-                    $("#checkall4").click(function(){
-                        $(".checkbox4").attr("checked","true");
-                    });
-                    $("#uncheckall4").click(function(){
-                        $(".checkbox4").removeAttr("checked");
-                    });
-                    $("#checkall5").click(function(){
-                        $(".checkbox5").attr("checked","true");
-                    });
-                    $("#uncheckall5").click(function(){
-                        $(".checkbox5").removeAttr("checked");
-                    });
-                    $("#checkall6").click(function(){
-                        $(".checkbox6").attr("checked","true");
-                    });
-                    $("#uncheckall6").click(function(){
-                        $(".checkbox6").removeAttr("checked");
-                    });
-                    $("#checkall7").click(function(){
-                        $(".checkbox7").attr("checked","true");
-                    });
-                    $("#uncheckall7").click(function(){
-                        $(".checkbox7").removeAttr("checked");
-                    });
-                    $("#checkall8").click(function(){
-                        $(".checkbox8").attr("checked","true");
-                    });
-                    $("#uncheckall8").click(function(){
-                        $(".checkbox8").removeAttr("checked");
-                    });
-                    $("#checkall9").click(function(){
-                        $(".checkbox9").attr("checked","true");
-                    });
-                    $("#uncheckall9").click(function(){
-                        $(".checkbox9").removeAttr("checked");
+                    //在所以表格上面加个父dom，实现事件委托 来监听按钮变化
+                    $("#lists").delegate("button","click",function(event){
+                            var target = $(event.target);
+                            var btn_id = target.attr('id');
+                            var num = btn_id.substr(btn_id.length-1,1);
+                            var input_class = ".checkbox"+num;
+                            console.log(btn_id);
+                            console.log(num);
+                            console.log(input_class);
+                            console.log(btn_id.indexOf("un"));
+                            if (btn_id.indexOf("un") != -1 ){
+                                //点击的是全选
+                                $(input_class).removeAttr("checked");
+                            }else{
+                                //点击取消全选
+                                $(input_class).attr("checked","true");
+                            }
                     });
 
                 });

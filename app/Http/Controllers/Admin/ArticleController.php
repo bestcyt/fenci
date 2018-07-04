@@ -276,46 +276,15 @@ class ArticleController extends Controller
             //分成5个级别的数组
             $words = Cache::get('words');
             $re1 = $re2 = $re3 = $re4 = $re5 = $re6 = $re7 = [];
-            for ($i=0;$i<count($words);$i++){
-                 for ($j=0;$j<count($re_arr);$j++){
-                $flag = 0;
-                    if (strtolower($words[$i]['word']) == $re_arr[$j]){
+            for ($i=0;$i<count($words);$i++){ //循环全部词汇
+                 for ($j=0;$j<count($re_arr);$j++){  //循环小写去重的选中的词汇
+                    if (strtolower($words[$i]['word']) == $re_arr[$j]){ //匹配等级，丢到不同等级数组
                         for($z=0;$z<count($levels);$z++){ //
                             if ($words[$i]['level'] == ($z+1)){
                                 $re_all[$z][] = $re_arr[$j];
-                                $flag =1;
                             }
                         }
-//                        if ($words[$i]['level'] == 1){
-//                            $re1[] = $re_arr[$j];
-//                            $flag =1;
-//                        }
-//                        if ($words[$i]['level'] == 2){
-//                            $re2[] = $re_arr[$j];
-//                            $flag =1;
-//                        }
-//                        if ($words[$i]['level'] == 3){
-//                            $re3[] = $re_arr[$j];
-//                            $flag =1;
-//                        }
-//                        if ($words[$i]['level'] == 4){
-//                            $re4[] = $re_arr[$j];
-//                            $flag =1;
-//                        }
-//                        if ($words[$i]['level'] == 5){
-//                            $re5[] = $re_arr[$j];
-//                            $flag =1;
-//                        }
-//                        if ($words[$i]['level'] == 6){
-//                            $re6[] = $re_arr[$j];
-//                            $flag =1;
-//                        }
-//                        if ($words[$i]['level'] == 7){
-//                            $re7[] = $re_arr[$j];
-//                            $flag =1;
-//                        }
                     }
-
                 }
                 //$reOther[] = $re_arr[$j];
             }
