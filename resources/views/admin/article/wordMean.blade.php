@@ -148,22 +148,19 @@
                                 $.each(data,function (item,val) {
                                     var str = '';
                                     var tb = "#t"+(item+1); //指定table 的id
-
                                     if(val.length > 0){
+                                        var checkbox = 'checkbox'+(item+1);
                                         $.each(val,function (i,v) {
                                             str += "<tr>";
-                                            var checkbox = 'checkbox'+(i+1);
-                                            str += "<td>"+"<input type='checkbox' class="+checkbox+" name="+v+" value="+v+">"+v+"<br>"+"</td>";
+                                            str += "<td>"+"<input type='checkbox' class='"+checkbox+"' name="+v+" value="+v+">"+v+"<br>"+"</td>";
                                             str += "</tr>";
                                         });
                                         var aaa = " "+tb+" tbody"; //选择器
-                                        console.log(aaa);
                                     }
+                                    console.log(item);
                                     $(aaa).html('');
                                     $(aaa).append(str);
-                                 });
-//                                str += "</table>";
-//                                $('#show').html(str); //将选择的CheckBox放进show
+                                });
                             }
                         },JSON);
                     };
@@ -181,71 +178,80 @@
                     var level = 0;
                     $.get("getLevel", function(result){
                         level = result;
+//                        for (var i=0;i<result;i++){
+//                            var chooseall = "#checkall"+(i+1);
+//                            var unchooseall = "#uncheckall"+(i+1);
+//
+//                            var checkbox = ".checkbox"+(i+1);
+//                            $(chooseall).click(function(i){
+//                                $(this).attr("checked","true");
+//                                console.log(i);
+//                                alert(i);
+//                            });
+//                            $(unchooseall).click(function(i){
+//                                alert(i);
+//                                $(this).removeAttr("checked");
+////                            $(checkbox).removeAttr("checked");
+//                            });
+//                        }
+                        console.log('result:'+result);
                     });
-                    for (var i=0;i<level;i++){
-                        var chooseall = "#checkall"+(i+1);
-                        var unchooseall = "#uncheckall"+(i+1);
+                    console.log('level:'+level);
 
-//                        var checkbox = ".checkbox"+(i+1);
-//                        $(chooseall).click(function(){
-//                            $(checkbox).attr("checked","true");
-//                        });
-//                        $(unchooseall).click(function(){
-//                            $(checkbox).removeAttr("checked");
-//                        });
-                    }
-                    $(".chooseAll").click(function(){
-//                        $(this).attr("checked","true");
-                        alert('adsf');
+                    $("#checkall1").click(function(){
+                        $(".checkbox1").attr("checked","true");
                     });
-                    $(".unChooseAll").click(function(){
-                        $(this).removeAttr("checked");
+                    $("#uncheckall1").click(function(){
+                        $(".checkbox1").removeAttr("checked");
                     });
-                    {{--var dd = {{ $levels }};--}}
-                    {{--//点击全选--}}
-
-//                    $("#checkall1").click(function(){
-//                        $(".checkbox1").attr("checked","true");
-//                    });
-//                    $("#uncheckall1").click(function(){
-//                        $(".checkbox1").removeAttr("checked");
-//                    });
-//                    $("#checkall2").click(function(){
-//                        $(".checkbox2").attr("checked","true");
-//                    });
-//                    $("#uncheckall2").click(function(){
-//                        $(".checkbox2").removeAttr("checked");
-//                    });
-//                    $("#checkall3").click(function(){
-//                        $(".checkbox3").attr("checked","true");
-//                    });
-//                    $("#uncheckall3").click(function(){
-//                        $(".checkbox3").removeAttr("checked");
-//                    });
-//                    $("#checkall4").click(function(){
-//                        $(".checkbox4").attr("checked","true");
-//                    });
-//                    $("#uncheckall4").click(function(){
-//                        $(".checkbox4").removeAttr("checked");
-//                    });
-//                    $("#checkall5").click(function(){
-//                        $(".checkbox5").attr("checked","true");
-//                    });
-//                    $("#uncheckall5").click(function(){
-//                        $(".checkbox5").removeAttr("checked");
-//                    });
-//                    $("#checkall6").click(function(){
-//                        $(".checkbox6").attr("checked","true");
-//                    });
-//                    $("#uncheckall6").click(function(){
-//                        $(".checkbox6").removeAttr("checked");
-//                    })
-//                    $("#checkall7").click(function(){
-//                        $(".checkbox7").attr("checked","true");
-//                    });
-//                    $("#uncheckall7").click(function(){
-//                        $(".checkbox7").removeAttr("checked");
-//                    })
+                    $("#checkall2").click(function(){
+                        $(".checkbox2").attr("checked","true");
+                    });
+                    $("#uncheckall2").click(function(){
+                        $(".checkbox2").removeAttr("checked");
+                    });
+                    $("#checkall3").click(function(){
+                        $(".checkbox3").attr("checked","true");
+                    });
+                    $("#uncheckall3").click(function(){
+                        $(".checkbox3").removeAttr("checked");
+                    });
+                    $("#checkall4").click(function(){
+                        $(".checkbox4").attr("checked","true");
+                    });
+                    $("#uncheckall4").click(function(){
+                        $(".checkbox4").removeAttr("checked");
+                    });
+                    $("#checkall5").click(function(){
+                        $(".checkbox5").attr("checked","true");
+                    });
+                    $("#uncheckall5").click(function(){
+                        $(".checkbox5").removeAttr("checked");
+                    });
+                    $("#checkall6").click(function(){
+                        $(".checkbox6").attr("checked","true");
+                    });
+                    $("#uncheckall6").click(function(){
+                        $(".checkbox6").removeAttr("checked");
+                    });
+                    $("#checkall7").click(function(){
+                        $(".checkbox7").attr("checked","true");
+                    });
+                    $("#uncheckall7").click(function(){
+                        $(".checkbox7").removeAttr("checked");
+                    });
+                    $("#checkall8").click(function(){
+                        $(".checkbox8").attr("checked","true");
+                    });
+                    $("#uncheckall8").click(function(){
+                        $(".checkbox8").removeAttr("checked");
+                    });
+                    $("#checkall9").click(function(){
+                        $(".checkbox9").attr("checked","true");
+                    });
+                    $("#uncheckall9").click(function(){
+                        $(".checkbox9").removeAttr("checked");
+                    });
 
                 });
     </script>
