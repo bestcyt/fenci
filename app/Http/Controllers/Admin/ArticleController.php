@@ -288,6 +288,10 @@ class ArticleController extends Controller
                 }
                 //$reOther[] = $re_arr[$j];
             }
+            for ($i=0;$i<count($re_all);$i++){
+                $re_all[$i] = array_unique($re_all[$i]);
+            }
+
 
             //使用response 可以防止多了双引号
             return response()->json($re_all);
