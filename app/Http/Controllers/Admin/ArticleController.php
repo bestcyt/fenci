@@ -126,6 +126,8 @@ class ArticleController extends Controller
         if ($request->method() == 'POST'){
             //获取缓存词汇库
             $words = Cache::get('words');
+
+
             //分词，形成数组
             $article = [];
             $this->pscws->send_text($request->input('article'));
@@ -148,63 +150,43 @@ class ArticleController extends Controller
 
             //先对提交的文章去重复，再重新排键值，times=该单词的个数
             $article_values = array_values($article); //初始去除符号后的分词结果重排键值
-            $article_unique = array_values(array_unique($article));//初始去除符号后的分词结果重排键值+去重
-
-
-            //循环统计值，修改数组结果，再遍历唯一编码
-            $art_arr = [];
-            for ($i=0;$i<count($article_unique);$i++){
-                $art_arr[$i]['word'] = $article_unique[$i];
-                $art_arr[$i]['times'] = 0;
-            }
 
             //统计去重后的文章的各个单词的个数 频数
-            $cipings = array_count_values($article_values);//本想用函数的，但是还是得两次循环才能写进频数，就放弃了
+            $articleWordTimes = array_count_values($article_values);//本想用函数的，但是还是得两次循环才能写进频数，就放弃了
 
-            for ($i=0;$i<count($article_values);$i++){
-                for ($j=0;$j<count($article_unique);$j++){
-                    if (strtolower($article_values[$i]) == strtolower($article_unique[$j])){  //判断词汇是否匹配
-                        $art_arr[$j]['times'] ++;
-                    }
-                }
-            }
+            //初始化输出的$outputWords
+            $outputWords = array_map(function ($word){
+                unset($word['created_at']);
+                unset($word['zanwu']);
+                return $word;
+            },$words);
 
-            //统计文章词汇各个等级的个数
+            //如何把频数弄进times呢？
+
+            //更新频数 和级别数量
             $level1 = $level2 = $level3 = $level4 = $level5 = 0;
-            for ($i=0;$i<count($words);$i++){
-                for ($j=0;$j<count($article_values);$j++){
-                    if ( strtolower($words[$i]['word']) == strtolower($article_values[$j])){  //判断词汇是否匹配
-                        if ($words[$i]['level'] == 1){
-                            $level1 ++;
-                        }
-                        if ($words[$i]['level'] == 2){
-                            $level2 ++;
-                        }
-                        if ($words[$i]['level'] == 3){
-                            $level3 ++;
-                        }
-                        if ($words[$i]['level'] == 4){
-                            $level4 ++;
-                        }
-                        if ($words[$i]['level'] == 5){
-                            $level5 ++;
-                        }
+            foreach ($outputWords as $outputWord => &$val){
+                //sheet的各个词汇的频数
+                $val['mean'] = strpos($val['mean'],'=') === 0 ? "'".$val['mean']:$val['mean'];
+                $word = strtolower($val['word']);
+                $val['times'] = isset($articleWordTimes[$word]) ? $articleWordTimes[$word] : 0;
+                //sheet2的级别个数
+                if(isset($articleWordTimes[$word])){
+                    //有捕捉到
+                    if ($val['level'] == 1){
+                        $level1 += $articleWordTimes[$word];
                     }
-                }
-            }
-
-            $outputWords = [];
-            //输出的word，加一列 频数
-            for ($i=0;$i<count($words);$i++){
-                $outputWords[$i]['id'] = $words[$i]['id'];
-                $outputWords[$i]['word'] = $words[$i]['word'];
-                $outputWords[$i]['mean'] = strpos($words[$i]['mean'],'=') === 0 ? "'".$words[$i]['mean']:$words[$i]['mean'];
-                $outputWords[$i]['code'] = $words[$i]['code'];
-                $outputWords[$i]['level'] = $words[$i]['level'];
-                $outputWords[$i]['times'] = 0;
-                for ($j=0;$j<count($art_arr);$j++){
-                    if ( strtolower($words[$i]['word']) == strtolower($art_arr[$j]['word'])){  //判断词汇是否匹配
-                        $outputWords[$i]['times'] = $art_arr[$j]['times'];
+                    if ($val['level'] == 2){
+                        $level2 += $articleWordTimes[$word];
+                    }
+                    if ($val['level'] == 3){
+                        $level3 += $articleWordTimes[$word];
+                    }
+                    if ($val['level'] == 4){
+                        $level4 += $articleWordTimes[$word];
+                    }
+                    if ($val['level'] == 5){
+                        $level5 += $articleWordTimes[$word];
                     }
                 }
             }
@@ -238,7 +220,7 @@ class ArticleController extends Controller
         if ($request->method() == 'POST' && $request->input('type') == 'ppl'){
             //ajax提交，返回分词结果
             $article_fenci = $article_fenci2 = [];
-           // $article_fenci = $article_fenci2 = $this->jieba->cut($request->input('article'),false);
+            // $article_fenci = $article_fenci2 = $this->jieba->cut($request->input('article'),false);
             $this->pscws->send_text($request->input('article'));
             while ($some = $this->pscws->get_result())
             {
@@ -277,7 +259,7 @@ class ArticleController extends Controller
             $words = Cache::get('words');
             $re1 = $re2 = $re3 = $re4 = $re5 = $re6 = $re7 = [];
             for ($i=0;$i<count($words);$i++){ //循环全部词汇
-                 for ($j=0;$j<count($re_arr);$j++){  //循环小写去重的选中的词汇
+                for ($j=0;$j<count($re_arr);$j++){  //循环小写去重的选中的词汇
                     if (strtolower($words[$i]['word']) == $re_arr[$j]){ //匹配等级，丢到不同等级数组
                         for($z=0;$z<count($levels);$z++){ //
                             if ($words[$i]['level'] == ($z+1)){
