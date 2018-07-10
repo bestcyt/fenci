@@ -143,13 +143,19 @@ class ArticleController extends Controller
             for ($i=0;$i<count($article);$i++){
                 $article[$i] = trim($article[$i]);
                 //去除一些符号，
-                if (in_array($article[$i],['"',',','.','，','。','!','?','(',')','《','》','（','）'])){
+                if (in_array($article[$i],['"',',','.','，','。','!','?','(',')','《','》','（','）','“','”'])){
                     unset($article[$i]);
                 }
             }
 
             //先对提交的文章去重复，再重新排键值，times=该单词的个数
             $article_values = array_values($article); //初始去除符号后的分词结果重排键值
+
+            //转为小写
+            $article_values = array_map(function ($article_value){
+                $h = strtolower($article_value);
+                return $h;
+            },$article_values);
 
             //统计去重后的文章的各个单词的个数 频数
             $articleWordTimes = array_count_values($article_values);//本想用函数的，但是还是得两次循环才能写进频数，就放弃了
@@ -163,15 +169,18 @@ class ArticleController extends Controller
 
             //如何把频数弄进times呢？
 
+
             //更新频数 和级别数量
-            $level1 = $level2 = $level3 = $level4 = $level5 = 0;
+            $level1 = $level2 = $level3 = $level4 = $level5 = $flag =  $flag2 = 0;
             foreach ($outputWords as $outputWord => &$val){
                 //sheet的各个词汇的频数
                 $val['mean'] = strpos($val['mean'],'=') === 0 ? "'".$val['mean']:$val['mean'];
                 $word = strtolower($val['word']);
                 $val['times'] = isset($articleWordTimes[$word]) ? $articleWordTimes[$word] : 0;
                 //sheet2的级别个数
+                $flag2 ++;
                 if(isset($articleWordTimes[$word])){
+                    $flag ++;
                     //有捕捉到
                     if ($val['level'] == 1){
                         $level1 += $articleWordTimes[$word];
