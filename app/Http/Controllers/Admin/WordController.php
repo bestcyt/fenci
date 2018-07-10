@@ -83,10 +83,10 @@ class WordController extends Controller
         for ($i=0;$i<count($re);$i++){
             $tem = $re[$i]->toArray(); //集合转为数组
             for ($j=0;$j<count($tem);$j++){
-                $insert_array[$j]['word'] = $tem[$j][0];
-                $insert_array[$j]['mean'] = $tem[$j][1];
+                $insert_array[$j]['word'] = trim($tem[$j][0]);
+                $insert_array[$j]['mean'] = trim($tem[$j][1]);
                 $insert_array[$j]['level'] = intval($tem[$j][2]);
-                $insert_array[$j]['zanwu'] = $tem[$j][3];
+                $insert_array[$j]['zanwu'] = trim($tem[$j][3]);
                 $insert_array[$j]['code'] = intval($tem[$j][4]);
                 $insert_array[$j]['created_at'] = $time;
             }
