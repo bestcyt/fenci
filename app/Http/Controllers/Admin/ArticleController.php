@@ -176,26 +176,28 @@ class ArticleController extends Controller
                 //sheet的各个词汇的频数
                 $val['mean'] = strpos($val['mean'],'=') === 0 ? "'".$val['mean']:$val['mean'];
                 $word = strtolower($val['word']);
-                $val['times'] = isset($articleWordTimes[$word]) ? $articleWordTimes[$word] : 0;
+                $exsit = array_key_exists($word,$articleWordTimes);
+                $val['times'] = $exsit ? $articleWordTimes[$word] : 0;
                 //sheet2的级别个数
                 $flag2 ++;
-                if(isset($articleWordTimes[$word])){
+                if($exsit){
                     $flag ++;
-                    //有捕捉到
+                    //有存在该键名
                     if ($val['level'] == 1){
-                        $level1 += $articleWordTimes[$word];
+                        $level1 += 1;
                     }
                     if ($val['level'] == 2){
-                        $level2 += $articleWordTimes[$word];
+                        $level2 += 1;
                     }
                     if ($val['level'] == 3){
-                        $level3 += $articleWordTimes[$word];
+                        $level3 += 1;
                     }
                     if ($val['level'] == 4){
-                        $level4 += $articleWordTimes[$word];
+                        $level4 += 1;
                     }
                     if ($val['level'] == 5){
-                        $level5 += $articleWordTimes[$word];
+                        $level5 += 1;
+                        //$level5 += $articleWordTimes[$word];
                     }
                 }
             }
