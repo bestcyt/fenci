@@ -60,7 +60,9 @@ class WordController extends Controller
         //re = 几个sheet
 
         //标准库创建指定长度数组，并初始化等级颜色
-        $level_caches = new \SplFixedArray(count($re));
+
+        $level_caches =  array_fill(0, count($re), '?');
+        //$level_caches = new \SplFixedArray(count($re));
         for($i=0;$i<count($re);$i++){
             $level_caches[$i] = $this->randColor();
         }
@@ -77,18 +79,24 @@ class WordController extends Controller
     //多个sheet
     public function manySheetStore($re){
 
+
         $time = date('Y-m-d H:m:i',time());
         $insert_array = $ar = $all_words = [];
         //每个sheet循环
         for ($i=0;$i<count($re);$i++){
             $tem = $re[$i]->toArray(); //集合转为数组
             for ($j=0;$j<count($tem);$j++){
-                $insert_array[$j]['word'] = trim($tem[$j][0]);
-                $insert_array[$j]['mean'] = trim($tem[$j][1]);
-                $insert_array[$j]['level'] = intval($tem[$j][2]);
-                $insert_array[$j]['zanwu'] = trim($tem[$j][3]);
-                $insert_array[$j]['code'] = intval($tem[$j][4]);
-                $insert_array[$j]['created_at'] = $time;
+                if(isset($tem[$j][0]) && isset($tem[$j][1]) && isset($tem[$j][2]) && isset($tem[$j][3])
+                && isset($tem[$j][4]))
+                {
+                    $insert_array[$j]['word'] = trim($tem[$j][0]);
+                    $insert_array[$j]['mean'] = trim($tem[$j][1]);
+                    $insert_array[$j]['level'] = intval($tem[$j][2]);
+                    $insert_array[$j]['zanwu'] = trim($tem[$j][3]);
+                    $insert_array[$j]['code'] = intval($tem[$j][4]);
+                    $insert_array[$j]['created_at'] = $time;
+                }
+
             }
             $all_words = array_merge($all_words,$insert_array);
 
