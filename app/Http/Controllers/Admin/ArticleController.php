@@ -163,7 +163,7 @@ class ArticleController extends Controller
             //初始化输出的$outputWords
             $outputWords = array_map(function ($word){
                 unset($word['created_at']);
-                unset($word['zanwu']);
+                unset($word['id']);
                 return $word;
             },$words);
 
@@ -204,7 +204,7 @@ class ArticleController extends Controller
 
             //统计每个等级次数
             $level = [[$level1,$level2,$level3,$level4,$level5]];
-            $sheet1_header = [['序号','词汇','释义','编码','级别','频数']];
+            $sheet1_header = [['词汇','释义','级别','暂无','编码','频数']];
             $sheet2_header = [['1级','2级','3级','4级','5级']];
             $sheet1 = array_merge($sheet1_header,$outputWords);
             $sheet2 = array_merge($sheet2_header,$level);
