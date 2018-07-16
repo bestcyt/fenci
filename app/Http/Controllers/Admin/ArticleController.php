@@ -240,7 +240,6 @@ class ArticleController extends Controller
                     $article_fenci[] = $article_fenci2[] = $word['word'];
                 }
             }
-
             $count = $time = 0;
             for ($i=0;$i<count($article_fenci);$i++){
                 $article_fenci[$i] = trim($article_fenci[$i]);
@@ -313,6 +312,7 @@ class ArticleController extends Controller
                 $article_cut[] = $word['word'];
             }
         }
+
         //去除数组中不需要的，保留选择的词汇数组
         unset($get_word['_token']);
         unset($get_word['article_string']);

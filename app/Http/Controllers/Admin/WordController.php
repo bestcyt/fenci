@@ -57,16 +57,22 @@ class WordController extends Controller
         $re =  Excel::load($file, function($reader) {
             $reader->noHeading(); //这一句
         })->get();
+
         //re = 几个sheet
+        //看re的数量，如果只有一个sheet的话，re就是词汇的数量而不是sheet的数量
+        if(count($re) > 20){
+            flash('格式错误，sheet要大于1；sheet的个数=等级数','danger')->important();
+            return back();
+        }
 
         //标准库创建指定长度数组，并初始化等级颜色
-
         $level_caches =  array_fill(0, count($re), '?');
         //$level_caches = new \SplFixedArray(count($re));
         for($i=0;$i<count($re);$i++){
             $level_caches[$i] = $this->randColor();
         }
-        //
+
+        //缓存等级及其颜色
         Cache::forever('levels',$level_caches);
 
         //多个sheet的插入

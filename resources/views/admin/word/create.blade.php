@@ -7,7 +7,7 @@
         <div class="col-sm-5">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h3> 上传Excel词汇，sheet从1到5等级</h3>
+                    <h3> 上传Excel词汇，sheet页数=词汇等级数</h3>
                     <div class="ibox-tools">
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>

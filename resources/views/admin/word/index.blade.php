@@ -62,9 +62,10 @@
                                     <th>等级</th>
                                     <th>词汇</th>
                                     <th>释义</th>
+                                    <th>暂无</th>
                                     <th>唯一编码</th>
                                     <th>更新时间</th>
-                                    <th>操作</th>
+                                    {{--<th>操作</th>--}}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -80,15 +81,16 @@
                                         <td>{{ $val->level }}</td>
                                         <td>{{ $val->word }}</td>
                                         <td>{{ $val->mean }}</td>
+                                        <td>{{ $val->zanwu }}</td>
                                         <td>{{ $val->code }}</td>
                                         <td>{{ $val->created_at }}</td>
-                                        <td>
+                                        {{--<td>--}}
                                             {{--<a href="{{ url('admin/city/'.$item->id.'/edit') }}" class="btn btn-xs btn-warning tooltips"  data-original-title="编辑" data-placement="top"><i class="fa fa-eye"></i></a>--}}
                                             {{--<a href="javascript:;" onclick="return false" class="btn btn-xs btn-outline btn-danger tooltips destroy_item" data-original-title="删除" data-placement="top">--}}
                                                 {{--<i class="fa fa-trash"></i>--}}
                                                 {{--<input type="hidden" value="{{ $item->id }}" class="city_id">--}}
                                             {{--</a>--}}
-                                        </td>
+                                        {{--</td>--}}
                                     </tr>
                                 @endforeach
                                 </tbody>
