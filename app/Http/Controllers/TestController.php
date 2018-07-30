@@ -8,13 +8,14 @@ use App\Help\scws\XDB_R;
 use Fukuball\Jieba\Finalseg;
 use Fukuball\Jieba\Jieba;
 use Illuminate\Http\Request;
+use AWS;
 
 class TestController extends Controller
 {
     public function __construct()
     {
-        Jieba::init();
-        Finalseg::init();
+//        Jieba::init();
+//        Finalseg::init();
     }
 
     //
@@ -61,5 +62,21 @@ class TestController extends Controller
         in honor of the great poet Qu Yuan, who jumped into the water and ended his 
         life for loving the country. ',false);
         dd($test);
+    }
+
+    public function sendSms(){
+        $sms = AWS::createClient('sns');
+
+        $sms->publish([
+            'Message' => 'Hello, This is just a test Message',
+            'PhoneNumber' => '+8613215053216',
+            'MessageAttributes' => [
+                'AWS.SNS.SMS.SMSType'  => [
+                    'DataType'    => 'String',
+                    'StringValue' => 'Transactional',
+                ]
+            ],
+        ]);
+        dd('sendSms');
     }
 }

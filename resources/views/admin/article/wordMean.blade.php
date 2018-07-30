@@ -143,6 +143,8 @@
                             data:{'article':strContent,'type':'ppl'},
                             type:'post',
                             success:function(data){
+                                console.log(data);
+                                //data = JSON.parse(data);
                                 var stra = "<table class='table table-bordered'>";
                                 //根据返回的去重后的数组，拼接table
                                 $.each(data,function (item,val) {
@@ -157,7 +159,6 @@
                                         });
                                         var aaa = " "+tb+" tbody"; //选择器
                                     }
-                                    console.log(item);
                                     $(aaa).html('');
                                     $(aaa).append(str);
                                 });
